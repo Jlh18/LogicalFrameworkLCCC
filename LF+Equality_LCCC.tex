@@ -1,0 +1,869 @@
+\documentclass{article}
+\usepackage[left=1in,right=1in,tmargin = 25mm,bmargin = 25mm]{geometry}
+\usepackage[left=1in,right=1in]{geometry}
+\usepackage{subfiles}
+\usepackage{amsmath, amssymb, stmaryrd, verbatim, bbm} % math symbols
+\usepackage{amsthm} % thm environment
+\usepackage{mdframed} % Customizable Boxes
+\usepackage{hyperref,nameref,cleveref,enumitem} % for references, hyperlinks
+\usepackage[dvipsnames]{xcolor} % Fancy Colours
+\usepackage{mathrsfs} % Fancy font
+\usepackage{tikz, tikz-cd, float} % Commutative Diagrams
+\usepackage{perpage}
+\usepackage{parskip} % So that paragraphs look nice
+\usepackage{ifthen,xargs} % For defining better commands
+\usepackage{anyfontsize}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tgpagella}
+\usepackage{titlesec}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{multicol}
+\usepackage{mathpartir}
+
+% % Misc
+\newcommand{\STLC}{\la^{\times \to}}
+\newcommand{\LF}[1]{\la^{\Pi \mathsf{Eq}}[#1]}
+\newcommand{\tdt}{\times \cdots \times}
+
+% % Parens
+\newcommand{\brkt}[1]{\left(#1\right)}
+\newcommand{\sqbrkt}[1]{\left[#1\right]}
+\newcommand{\bbrkt}[1]{\llbracket #1 \rrbracket}
+
+% %
+\newenvironment{intuit}{\textit{Intuition - }\em}{}
+
+% % Types
+\newcommand{\term}{\mathsf{term}}
+\newcommand{\type}{\mathsf{type}}
+\newcommand{\IsOf}[2]{#1 \, : \, #2}
+\newcommand{\Subst}[3]{[#1 / #2] #3}
+\newcommand{\SortCS}{\mathsf{Sort}}
+\newcommand{\PiCS}[3]{\{#1 \, : \, #2\} \, #3}
+\newcommand{\LamCS}[3]{[#1 \, : \, #2] \, #3}
+\newcommand{\ApCS}[2]{#1 \, #2}
+\newcommand{\EqCS}[3]{#2 =_{#1} #3}
+\newcommand{\SelfCS}{\mathsf{self}}
+\newcommand{\CtxExt}[3]{#1,#2 : #3}
+\newcommand{\BNFSep}{\, \, | \, \,}
+\newcommand{\CtxJdg}[1]{#1 \vdash \mathsf{ctx}}
+\newcommand{\ClsJdg}[2]{#1 \vdash #2 \,\, \mathsf{cls}}
+\newcommand{\ObjJdg}[3]{#1 \vdash #2 \, : \, #3 }
+\newcommand{\IdClsJdg}[3]{\ClsJdg{#1}{#2 = #3}}
+\newcommand{\IdObjJdg}[4]{\ObjJdg{#1}{#2 = #3}{#4}}
+\newcommand{\CtxSortJdg}[1]{#1 \vdash \mathsf{Sort}}
+
+% % Proof
+\newenvironment{forward}{($\implies$)}{}
+\newenvironment{backward}{($\limplies$)}{}
+
+% % Ad-hoc Notation
+\DeclareMathOperator{\supp}{supp}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\st}{\,|\,}
+\newcommand{\subs}{\subseteq}
+\newcommand{\nothing}{\varnothing}
+\newcommand{\inv}{^{-1}}
+\renewcommand{\bar}[1]{\overline{#1}}
+\newcommand{\abs}[1]{\left\vert #1 \right\vert}
+\newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\<}{\langle}
+\renewcommand{\>}{\rangle}
+
+% % Greek
+\newcommand{\al}{\alpha}
+\newcommand{\be}{\beta}
+\newcommand{\ga}{\gamma}
+\newcommand{\de}{\delta}
+\newcommand{\ep}{\varepsilon}
+\newcommand{\io}{\iota}
+\newcommand{\ka}{\kappa}
+\newcommand{\la}{\lambda}
+\newcommand{\om}{\omega}
+\newcommand{\si}{\sigma}
+\newcommand{\ze}{\zeta}
+
+\newcommand{\Ga}{\Gamma}
+\newcommand{\De}{\Delta}
+\newcommand{\Th}{\Theta}
+\newcommand{\La}{\Lambda}
+\newcommand{\Si}{\Sigma}
+\newcommand{\Om}{\Omega}
+
+% % Mathbb
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\M}{\mathbb{M}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\V}{\mathbb{V}}
+\newcommand{\U}{\mathbb{U}}
+
+% % Mathcal
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+% % Mathfrak
+\newcommand{\f}[1]{\mathfrak{#1}}
+
+% % Mathrsfs
+\newcommand{\s}[1]{\mathscr{#1}}
+
+% % Category Theory
+\newcommand{\Obj}[1]{\mathrm{Obj}\left(#1\right)}
+\newcommand{\End}[2]{\mathrm{End}_{#1}#2\,}
+\newcommand{\Aut}[2]{\mathrm{Aut}_{#1}#2\,}
+\newcommand{\op}{^{\textsf{op}}}
+\newcommand{\iso}{\cong}
+\newcommand{\id}[1]{\mathbbm{1}_{#1}}
+\newcommand{\hookr}{\hookrightarrow}
+\newcommand{\yo}{\mathbf{y}}
+\newcommand{\TERM}{\mathbf{1}}
+\DeclareMathOperator{\colim}{colim}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\codom}{codom}
+
+\newcommand{\CAT}{\mathbf{Cat}}
+\newcommand{\SET}{\mathbf{Set}}
+\newcommand{\PSH}[1]{\mathbf{PSh}\brkt{#1}}
+\newcommand{\SH}[1]{\mathbf{Sh}\brkt{#1}}
+% \newcommand{\TOP}{\mathbf{Top}}
+%\newcommand{\GRP}{\mathbf{Grp}}
+% \newcommand{\RING}{\mathbf{Ring}}
+% \newcommand{\MOD}[1][R]{#1\text{-}\mathbf{Mod}}
+% \newcommand{\VEC}[1][K]{#1\text{-}\mathbf{Vec}}
+% \newcommand{\ALG}[1][R]{#1\text{-}\mathbf{Alg}}
+
+
+
+% % xcolor
+\definecolor{darkgrey}{gray}{0.10}
+\definecolor{lightgrey}{gray}{0.50}
+\definecolor{slightgrey}{gray}{0.80}
+\definecolor{softblue}{RGB}{30,100,200}
+\definecolor{syntax}{RGB}{52, 72, 115}
+\definecolor{semantics}{RGB}{168, 50, 82}
+
+% % hyperref
+\hypersetup{
+      colorlinks = true,
+      linkcolor = {softblue},
+      citecolor = {blue}
+}
+
+\newcommand{\link}[1]{\hypertarget{#1}{}}
+\newcommand{\linkto}[2]{\hyperlink{#1}{#2}}
+
+% Theorems
+
+% % custom theoremstyles
+\newtheoremstyle{definitionstyle}
+{0pt}% above thm
+{0pt}% below thm
+{}% body font
+{}% space to indent
+{\bf}% head font
+{\vspace{1mm}}% punctuation between head and body
+{\newline}% space after head
+{\thmname{#1}\thmnote{\,\,--\,\,#3}}
+
+% % custom theoremstyles
+\newtheoremstyle{propositionstyle}
+{0pt}% above thm
+{0pt}% below thm
+{}% body font
+{}% space to indent
+{\bf}% head font
+{\vspace{1mm}}% punctuation between head and body
+{\newline}% space after head
+{\thmname{#1}\thmnote{\,\,--\,\,#3}}
+
+\newtheoremstyle{exercisestyle}%
+{0pt}% above thm
+{0pt}% below thm
+{\it}% body font
+{}% space to indent
+{\scshape}% head font
+{.}% punctuation between head and body
+{ }% space after head
+{\thmname{#1}\thmnote{ (#3)}}
+
+\newtheoremstyle{remarkstyle}%
+{0pt}% above thm
+{0pt}% below thm
+{}% body font
+{}% space to indent
+{\it}% head font
+{.}% punctuation between head and body
+{ }% space after head
+{\thmname{#1}\thmnote{\,\,--\,\,#3}}
+
+% % Theorem environments
+
+\theoremstyle{definitionstyle}
+\newmdtheoremenv[
+    %skipabove = \baselineskip
+    linewidth = 1.2pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{dfn}{Definition}
+\newmdtheoremenv[
+    linewidth = 1 pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = lightgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{prop}{Proposition}
+\newmdtheoremenv[
+    linewidth = 1 pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = lightgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{cor}{Corollary}
+\newmdtheoremenv[
+    linewidth = 1 pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = lightgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{lem}{Lemma}
+\newmdtheoremenv[
+    linewidth = 1.2pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{thm}{Theorem}
+
+\theoremstyle{exercisestyle}
+\newmdtheoremenv[
+    linewidth = 0.7 pt,
+    leftmargin = 20pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{ex}{Exercise}
+\newmdtheoremenv[
+    linewidth = 0.7 pt,
+    leftmargin = 20pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{eg}{Example}
+\newmdtheoremenv[
+    linewidth = 0.7 pt,
+    leftmargin = 20pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{nttn}{Notation}
+
+\theoremstyle{remarkstyle}
+\newtheorem{rmk}{Remark}
+
+% % footnotes
+\renewcommand{\thempfootnote}{$\dagger$}
+\MakePerPage{footnote}
+
+% % tikzcd diagram
+\newenvironment{cd}{
+    \begin{figure}[H]
+    \centering
+    \begin{tikzcd}
+}{
+    \end{tikzcd}
+    \end{figure}
+}
+
+% % Section titles
+\titlespacing*{\section}
+{0pt}{5ex plus 1ex minus .2ex}{4ex plus .2ex}
+\titlespacing*{\subsection}
+{0pt}{5ex plus 1ex minus .2ex}{4ex plus .2ex}
+
+% Syntax highlighting for lean
+\usepackage{color}
+\definecolor{keywordcolor}{rgb}{0.6, 0.3, 0.6}   % light purple
+\definecolor{tacticcolor}{rgb}{0.2, 0.2, 0.6}    % dark purple
+\definecolor{commentcolor}{rgb}{0.4, 0.4, 0.4}   % grey
+\definecolor{symbolcolor}{rgb}{0.7, 0.2, 0.2}    % blue
+\definecolor{sortcolor}{rgb}{0.2, 0.7, 0.7}      % cyan
+\definecolor{attributecolor}{RGB}{120,0,0}       % maroon
+\definecolor{draculaGrey}{RGB}{25, 27, 15}       % grey
+
+\def\lstlanguagefiles{lstlean.tex}
+
+% set default language
+\lstset{language=lean}
+
+\begin{document}
+\title{Equational Logical Frameworks as Locally Cartesian Closed Categories}
+\author{Joseph Hua}
+\maketitle
+
+\tableofcontents
+
+\section{Overview}
+
+\begin{itemize}
+  \item Introduce LF with equality. Closely follow \cite{harper2021equational}
+  \item Introduce the categorical way of looking at the type formers (motivational)
+  \item Construct category of contexts formally
+  \item General model of LF in an LCCC
+  \item Lawvere style correspondence
+\end{itemize}
+
+In the first section, we present an \textit{equational logical framework} as in \cite{harper2021equational},
+which can be used to define dependent type theories such as Martin L{\"o}f type theory or
+\textsf{ModTT} \cite{Sterling_2021}.
+
+\subsection{Notation}
+
+We follow \cite{harper2021equational} and use the word ``class'' for what is usually called ``type'' and
+the word ``object'' for what is usually called ``term''.
+This is to distinguish between the meta-level class in the logical framework
+and types internal to the type theory defined in the logical framework.
+To not confuse this with the categorical notion of object,
+we will write $\CC$-object for an object in a category $\CC$.
+
+\input{LF_syntax.tex}
+
+\section{Categorical definitions}
+
+\begin{dfn}[Cartesian closed category (CCC)]
+  \link{dfn_CCC}
+  We say a category $\CC$ is cartesian closed when
+  \begin{itemize}
+    \item $\CC$ has finite products
+    \item For each $\CC$-object $A$, the product with $A$ functor $\times A : \CC \to \CC$ has a right adjoint.
+  \end{itemize}
+  We denote the right adjoint by $[A,-]$ and call it internal hom.
+\end{dfn}
+
+\begin{dfn}[Locally cartesian closed category (LCCC)]
+  We say a category $\CC$ is locally cartesian closed when either of the equivalent definitions hold
+  \begin{enumerate}
+    \item Every slice category $\CC / A$ over a $\CC$-object $A$ is cartesian closed.
+    \item $\CC$ has pullbacks, and for each morphism $f : B \to A$ in $\CC$,
+          the base change (pullback along $f$) $f^{*} : \CC / A \to \CC / B$ has a right adjoint.
+  \end{enumerate}
+  We denote the right adjoint to base change by $\Pi_{f}$.
+\end{dfn}
+
+We do not show that these two definitions are equivalent.
+The idea is that pullbacks correspond to products in slices
+and $\Pi$s correspond to internal homs in slices.
+
+\section{Intuition for considering LCCCs}
+
+We want to find categorical semantics for our type theory.
+This amounts to one of two equivalent things
+\begin{itemize}
+  \item View each aspect of the type theory in a category $\CC$
+  \item Construct a syntactic category (which will be the ``category of contexts'')
+        and take semantics to be anything that imitates it (in a Platonic form sense).
+\end{itemize}
+
+For this section we refer to $\STLC$,
+a simply typed $\la$-calculus with only unit, product and function classes.
+And use intuition of its categorical semantics to motivate those for logical frameworks.
+
+Recall $\STLC$ can be interpreted in a \linkto{dfn_CCC}{CCC} $\CC$ by
+taking classes $K$ as $\CC$-objects $\bbrkt{K}$,
+contexts $\CtxExt{X_{1}:K_{1},\dots}{X_{n}}{K_{n}}$
+as products $\bbrkt{K_{1}} \tdt \bbrkt{K_{n}}$,
+and objects $\ObjJdg{\Ga}{K}{O}$ as morphisms $\bbrkt{O} : \bbrkt{\Ga} \to \bbrkt{K}$. % % Ref needed
+This seems quite natural, since product classes become products,
+and function classes become internal homs in the semantics.
+If we are to immitate this for $\LF{\Si}$,
+we would only be able to talk about \textit{closed classes} $\ClsJdg{\bullet}{K}$,
+since in $\STLC$ we don't have dependent classes $\ClsJdg{\Ga}{K}$.
+However, in the presence of dependent pairs (aka $\Si$-types) we
+could view a context $\Ga = \CtxExt{X_{1}:K_{1},\dots}{X_{n}}{K_{n}}$
+as a closed class $\Si_{\Ga} := \Si_{X_{1}:K_{1}} \cdots \Si_{X_{n-1}:K_{n-1}} K_{n}$.
+Then any dependent class can be viewed as a context, which can be viewed as a closed class.
+
+\subsection{Contexts and dependent classes}
+
+Instead of including dependent pairs,
+let us view dependent classes $\ClsJdg{\Ga}{K}$ as extended contexts
+$\CtxExt{\Ga}{X}{K}$, and first interpret \textit{contexts} as $\CC$-objects,
+and \textit{as a consequence} dependent classes as $\CC$-objects.
+
+\begin{multicols}{2}
+  \color{syntax}{
+  \[\CtxJdg{\Ga}\]}
+
+  \color{semantics}{
+  \[\bbrkt{\Ga} \in \CC\]
+  }
+\end{multicols}
+
+It is then natural to define morphisms of contexts (aka a substitution),
+denoted $\ObjJdg{\Ga}{\si}{\De}$,
+consisting of the data of objects
+
+\begin{align*}
+  &\ObjJdg{\Ga}{\si_{1}}{K_{1}}\\
+  &\ObjJdg{\Ga}{\si_{2}}{\Subst{\si_{1}}{X_{1}}{K_{2}}}\\
+  &\vdots & \text{ when } \De = \CtxExt{X_{1}:K_{1}}{\cdots, X_{n}}{K_{n}}\\
+  &\ObjJdg{\Ga}{\si_{n}}{\Subst{\si_{n-1}}{X_{n-1}}{\cdots \Subst{\si_{1}}{X_{1}}{K_{n}}}}
+\end{align*}
+
+Such a substitution corresponds to a closed object of the closed class
+$\Si_{\Ga} \to \Si_{\De}$ in the presence of dependent pairs.
+
+\begin{multicols}{2}
+  \color{syntax}{
+  \[\ObjJdg{\Ga}{\si}{\De}\]}
+
+  \color{semantics}{
+  \[\bbrkt{\si} : \bbrkt{\Ga} \to \bbrkt{\De}\]
+  }
+\end{multicols}
+
+The empty context gives an object $\bbrkt{\bullet}$,
+and for any context $\Ga$ there is exactly one substitution $\ObjJdg{\Ga}{\si}{\bullet}$,
+given by the data of no objects.
+This makes $\bbrkt{\bullet}$ the terminal object.
+
+\begin{multicols}{2}
+  \color{syntax}{
+  \[\infer[\textsc{ctx-emp}]{\CtxJdg{\bullet}}{}\]}
+
+  \color{semantics}{
+  \[\TERM_{\CC} \in \CC\]
+  }
+\end{multicols}
+
+For context extension, given $\ClsJdg{\Ga}{K}$,
+we obtain a substitution $\ObjJdg{\CtxExt{\Ga}{X}{K}}{\si}{\Ga}$
+by $\ObjJdg{\CtxExt{\Ga}{X}{K}}{X_{i}}{K_{i}}$ for each $X_{i} : K_{i} \in \Ga$.
+Then let's take the interpretation of $K$ to be a $\CC/\bbrkt{\Ga}$-object,
+where $\CC/\bbrkt{\Ga}$ is the slice category.
+
+\[ \bbrkt{\ClsJdg{\Ga}{K}} := \bbrkt{\CtxExt{\Ga}{X}{K}} \text{ and } \bbrkt{\ObjJdg{\CtxExt{\Ga}{X}{K}}{\si}{\Ga}}\]
+
+We can informally identify use the slice-object $\bbrkt{\ClsJdg{\Ga}{K}}$ to denote the underlying morphism.
+
+\begin{multicols}{2}
+  \color{syntax}{
+  \[\infer[\textsc{ctx-ext}]{\CtxJdg{\CtxExt{\Ga}{X}{K}}}{\ClsJdg{\Ga}{K}}\]}
+
+
+  \color{semantics}{
+    \begin{cd}
+     & \\
+  	{\bbrkt{\CtxExt{\Ga}{X}{K}}} && {\bbrkt{\Ga}}
+	\arrow["{\bbrkt{\ClsJdg{\Ga}{K}}}", from=2-1, to=2-3]
+  \end{cd}
+  }
+\end{multicols}
+
+\subsection{Objects}
+
+In the $\STLC$ case we interpreted objects
+$\ObjJdg{\Ga}{K}{O}$ as morphisms $\bbrkt{O} : \bbrkt{\Ga} \to \bbrkt{K}$ in $\CC$.
+Since the classes are now dependent,
+and the object is situated in some context,
+we should upgrade this to a morphism in the slice $\CC / \bbrkt{\Ga}$.
+
+\begin{multicols}{2}
+
+    \[\color{syntax}\ObjJdg{\Ga}{O}{K}\]
+
+
+  \color{semantics}{
+  \begin{cd}
+     {\bbrkt{\Ga}} && {\bbrkt{\Ga,X:K}} \\
+    & {\bbrkt{\Ga}}
+    \arrow["{\bbrkt{\ObjJdg{\Ga}{O}{K}}}", from=1-1, to=1-3]
+    \arrow["{\id{\bbrkt{\Ga}}}"', from=1-1, to=2-2]
+    \arrow["{\bbrkt{\ClsJdg{\Ga}{K}}}", from=1-3, to=2-2]
+  \end{cd}
+  }
+\end{multicols}
+
+We can call $\bbrkt{\ObjJdg{\Ga}{O}{K}}$
+a section of the bundle $\bbrkt{\ClsJdg{\Ga}{K}}$
+in the sense that for any collection of objects $O_{1},\cdots,O_{n}$ in the classes from $\Ga$,
+there is a closed class \[\ClsJdg{\bullet}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{K}}\]
+A section of the bundle then picks out for any such collection of objects,
+an object \[\ObjJdg{\bullet}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{O}}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{K}}\]
+\begin{multicols}{2}
+
+    \[\color{syntax}  \infer[\textsc{var-obj}]{\ObjJdg{\Ga}{X}{K}}
+    {\CtxJdg{\Ga} & X:K \in \Ga}\]
+
+
+  \color{semantics}{
+  \begin{cd}
+     {\bbrkt{\Ga}} && {\bbrkt{\Ga,Y:K}} \\
+    & {\bbrkt{\Ga}}
+    \arrow["{\bbrkt{\ObjJdg{\Ga}{X}{K}}}", from=1-1, to=1-3]
+    \arrow["{\id{\bbrkt{\Ga}}}"', from=1-1, to=2-2]
+    \arrow["{\bbrkt{\ClsJdg{\Ga}{K}}}", from=1-3, to=2-2]
+  \end{cd}
+  }
+\end{multicols}
+
+We may also write $\bbrkt{K}$ to mean $\bbrkt{\ClsJdg{\Ga}{K}}$ for brevity.
+
+\subsection{Substitution}
+
+Context morphisms (aka substitutions) are dependent tuples of objects,
+just as contexts are dependent tuples of classes.
+They can be {\color{semantics} composed}, which we can view as {\color{syntax} sequential substitution}.
+They can induce {\color{syntax} substitutions on dependent classes},
+which we will show corresponds to {\color{semantics} pullback of bundles}.
+They can induce {\color{syntax} substitution on objects} (more generally {\color{syntax} substitution on substitutions}),
+which we will show corresponds to {\color{semantics} pullback of sections}
+(more generally {\color{semantics} existence of all pullbacks}).
+
+First let us suppose $\ObjJdg{\Ga}{\si}{\De}$ is a substitution and $\ClsJdg{\De}{K}$.
+Then we can form $\ClsJdg{\Ga}{\si K}$,
+where
+\[ \si K := \Subst{\si_{n}}{X_{n}}{ \cdots \Subst{\si_{1}}{X_{1}}{K}} \quad \text{ and }
+  \quad \De = \CtxExt{X_{1}:K_{1}}{\cdots, X_{n}}{K_{n}}\]
+
+This automatically gives us a substitution $\ObjJdg{\CtxExt{\Ga}{X}{\si K}}{\si :: X}{{\CtxExt{\De}{X}{K}}}$.
+This says we have a pullback
+
+\begin{multicols}{2}
+
+\[\color{syntax} \infer{\ClsJdg{\Ga}{\si K}}{\ObjJdg{\Ga}{\si}{\De} & & \ClsJdg{\De}{K} } \]
+
+%% this admissible judgment needs a name
+
+{\color{semantics}
+\begin{cd}
+  {\bbrkt{\CtxExt{\Ga}{X}{\si K}}} && {\bbrkt{\CtxExt{\De}{X}{K}}} \\
+  \\
+  {\bbrkt{\Ga}} && {\bbrkt{\De}}
+  \arrow["{\bbrkt{\si}}"', from=3-1, to=3-3]
+  \arrow["{\bbrkt{K}}", from=1-3, to=3-3]
+  \arrow["{\bbrkt{\si :: X}}", dashed, from=1-1, to=1-3]
+  \arrow["{\bbrkt{\si K}}"', dashed, from=1-1, to=3-1]
+  \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=3-3]
+\end{cd}}
+
+\end{multicols}
+
+To check the diagram commutes, we use a notion of judgmental equality between substitutions,
+which we can define component-wise by judgmental equality between objects.
+For the universal property we need to apply (syntactic) substitution on objects.
+
+Now suppose $\ObjJdg{\De}{O}{K}$.
+Then we can form $\ObjJdg{\Ga}{\si O}{\si K}$,
+where
+\[ \si O := \Subst{\si_{n}}{X_{n}}{ \cdots \Subst{\si_{1}}{X_{1}}{O}}\]
+
+This says our pullback diagram extends
+
+\begin{multicols}{2}
+
+\[\color{syntax} \infer{\ObjJdg{\Ga}{\si O}{\si K}}{\ObjJdg{\Ga}{\si}{\De} & & \ObjJdg{\De}{O}{K} } \]
+
+%% this admissible judgment needs a name
+
+{\color{semantics}
+\begin{cd}
+  	{\bbrkt{\Ga}} && {\bbrkt{\De}} \\
+	\\
+	{\bbrkt{\CtxExt{\Ga}{X}{\si K}}} && {\bbrkt{\CtxExt{\De}{X}{K}}} \\
+	\\
+	{\bbrkt{\Ga}} && {\bbrkt{\De}}
+	\arrow["{\bbrkt{\si}}"', from=5-1, to=5-3]
+	\arrow["{\bbrkt{K}}", from=3-3, to=5-3]
+	\arrow["{\bbrkt{\si :: X}}", from=3-1, to=3-3]
+	\arrow["{\bbrkt{\si K}}"', from=3-1, to=5-1]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=3-1, to=5-3]
+	\arrow["{\bbrkt{\si O}}"', dashed, from=1-1, to=3-1]
+	\arrow["{\bbrkt{O}}", from=1-3, to=3-3]
+	\arrow["{\bbrkt{\si}}", from=1-1, to=1-3]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=3-3]
+\end{cd}}
+\end{multicols}
+
+Now we can use substitution on classes and objects to define composition of context morphisms.
+Given two substitutions $\ObjJdg{\Ga_{0}}{\si}{\Ga_{1}}$ and $\ObjJdg{\Ga_{1}}{\rho}{\Ga_{2}}$
+we define the composition $\ObjJdg{\Ga_{0}}{\si \gg \rho}{\Ga_{2}}$
+by giving
+
+\begin{align*}
+  &\ObjJdg{\Ga_{0}}{\si{\rho_{1}}}{\si K_{1}}\\
+  &\ObjJdg{\Ga_{0}}{\si\rho_{2}}{\si \Subst{\rho_{1}}{X_{1}}{K_{2}}} \\
+  &\vdots & \text{ where } & \Ga_{2} = \CtxExt{X_{1}:K_{1}}{\cdots, X_{n}}{K_{n}}\\
+  &\ObjJdg{\Ga_{0}}{\si \rho_{n}}{\si \Subst{\rho_{n-1}}{X_{n-1}}{\cdots \Subst{\rho_{1}}{X_{1}}{K_{n}}}}
+\end{align*}
+
+So we have
+
+\begin{multicols}{2}
+  \[\color{syntax} \ObjJdg{\Ga_{0}}{\si \gg \rho}{\Ga_{2}}\]
+
+   \[ \color{semantics}
+    \bbrkt{\rho} \circ \bbrkt{\si} : \bbrkt{\Ga_0} \to \bbrkt{\Ga_2} \]
+\end{multicols}
+
+There is a techincal issue here about substitution not working out in a general LCCC,
+because of pullback only being unique up to isomorphism.
+We delay this issue until later,
+and assume strict pullbacks,
+i.e. all pullbacks in $\CC$ of the same diagram are equal. %% reference + link to later
+
+\subsection{Equality classes}
+In the previous subsection we showed that the semantics category $\CC$
+pullbacks of context morphisms along context extensions/classes.
+By (assume strict) pullback pasting \cite{pullback_pasting} we even have pullback of context morphisms along
+a finite composition of context extensions.
+Do we have pullback along any substitution?
+The answer is yes, given the presence of an equality class.
+
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXERlIFxcdGltZXNfe1xcR2F9IEUiXSxbMiwwLCJFIl0sWzAsMiwiXFxEZSJdLFsyLDIsIlxcR2EiXSxbMCwxXSxbMiwzLCJcXGRlIiwyXSxbMSwzLCJlIl0sWzAsMl1d
+\[\begin{tikzcd}
+  {\bbrkt{\De} \times_{\bbrkt{\Ga}} \bbrkt{E}} && \bbrkt{E} \\
+  \\
+  \bbrkt{\De} && \bbrkt{\Ga}
+  \arrow["\pi_{E}", from=1-1, to=1-3]
+  \arrow["\bbrkt{\de}"', from=3-1, to=3-3]
+  \arrow["\bbrkt{\ep}", from=1-3, to=3-3]
+  \arrow["\pi_{\De}"', from=1-1, to=3-1]
+  \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=3-3]
+\end{tikzcd}\]
+
+Again imagining $\De$ and $E$ as closed classes,
+the pullback should be ``pairs of objects in $\De \times E$'' that
+are equal upon their substitutions into the objects given by $\de$ and $\ep$.
+In set-theoretic notation (since we are inspired by pullback in $\SET$)
+\[ \set{ (X,Y) \in \De \times E \st \de(X) = \ep(Y) }\]
+Translating this idea into a context means that we need
+
+\begin{align*}
+  {\bbrkt{\De} \times_{\bbrkt{\Ga}} \bbrkt{E}} & = \bbrkt{X : \De, Y : E, H : \EqCS{\Ga}{\de}{\ep}}\\
+  \pi_{\De} & = \bbrkt{ X } \\
+  \pi_{E} & = \bbrkt{ Y }
+\end{align*}
+
+In detail: if $\De = X_{1} : \De_{1}, \cdots , X_{n} : \De_{n}$, $E = Y_{1} : E_{1}, \cdots, Y_{m} : E_{m}$
+and $\Ga = Z_{1} : \Ga_{1}, \cdots , Z_{l} : \Ga_{l}$
+then the context is
+\[X_{1} : \De_{1}, \cdots , X_{n} : \De_{n}, Y_{1} : E_{1}, \cdots, Y_{m} : E_{m} ,
+  H_{1} : \EqCS{\Ga_{1}}{\de_{1}}{\ep_{1}}, \cdots , H_{k} : \EqCS{\Ga_{l}}{\de_{l}}{\ep_{l}}\]
+and the context morphisms are those that return the relevant variables from this context.
+
+To show the universal property, given cone $\bbrkt{Z}$
+we use that judgmental equalities
+$\IdObjJdg{Z}{\ze \gg \de}{\ze \gg \ep}{\Ga}$
+lift
+to $\ObjJdg{Z}{\SelfCS}{\EqCS{\Ga}{\ze \gg \de}{\ze \gg \ep}}$ for existence
+(this fact follows from judgmental equality being a congruence);
+we use \textsc{unicity} for uniqueness.
+
+\subsection{Dependent function classes}
+
+In the $\STLC$ case, $\la$-abstraction and function application
+provide the adjunction isomorphism in the semantics
+
+\begin{cd}
+  	{\CC(\bbrkt{\Ga  \times  K_0}, \bbrkt{K_1})} && {\CC(\bbrkt{\Ga},\bbrkt{K_0 \to K_1})}
+	\arrow["\lambda", shift left, from=1-1, to=1-3]
+	\arrow["{\mathsf{ap}}", shift left, from=1-3, to=1-1]
+\end{cd}
+
+Let us try to consider what happens when function classes
+are replaced with dependent function classes.
+Instead of morphisms in the ambient category,
+we need morphisms in slices,
+since we are concerned with objects $\ObjJdg{\Ga}{O}{\PiCS{X}{S}{K}}$.
+
+\begin{cd}
+  	{\CC/? \, (\, {?}\, , \bbrkt{K})} && {\CC/\bbrkt{\Ga}(\id{\bbrkt{\Ga}},\bbrkt{{\PiCS{X}{S}{K}}})}
+	\arrow["\textsc{pi-lam-obj}", shift left, from=1-1, to=1-3]
+	\arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
+\end{cd}
+
+The introduction rule \textsc{pi-lam-obj} fill in the missing details.
+We only use a special case of \textsc{pi-app-obj} here.
+
+  {\color{syntax}
+    \begin{mathpar}
+      \infer[\textsc{pi-lam-obj}]{\ObjJdg{\Ga}{\LamCS{X}{S}{O}}{\PiCS{X}{S}{K}}}
+        {{\color{lightgrey}\ObjJdg{\Ga}{S}{\SortCS}} & \ObjJdg{\CtxExt{\Ga}{X}{S}}{O}{K}}
+
+      \infer[\textsc{pi-app-obj}]{\ObjJdg{\CtxExt{\Ga}{X}{S}}{\ApCS{O}{X}}{K}}
+        {\ObjJdg{\CtxExt{\Ga}{X}{S}}{O}{\PiCS{X}{S}{K}} & {\color{lightgrey}\ObjJdg{\CtxExt{\Ga}{X}{S}}{X}{S}}}
+    \end{mathpar}}
+
+
+{\color{semantics}
+\begin{cd}
+  {\CC/\bbrkt{\CtxExt{\Ga}{X}{S}} \, (\id{\CtxExt{\Ga}{X}{S}} , \bbrkt{K})} && {\CC/\bbrkt{\Ga}(\id{\bbrkt{\Ga}},\bbrkt{{\PiCS{X}{S}{K}}})}
+  \arrow["\textsc{pi-lam-obj}", shift left, from=1-1, to=1-3]
+  \arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
+\end{cd}
+}
+
+The $\be$ and $\eta$ rules for \textsc{pi} state that the maps back and forth form a bijection.
+It is not yet clear what adjunction the above is a special case of.
+Following the moves from before and our categorical intuition,
+we first replace $\id{\bbrkt{\Ga}}$ with a more general $\CC/\bbrkt{\Ga}$-object,
+a context morphism $\bbrkt{\ObjJdg{E}{\ep}{\Ga}}$.
+The object is then replaced with a morphism in the slice
+$\bbrkt{\ep :: f} \in \CC/\bbrkt{\Ga}(\bbrkt{\ep},\bbrkt{{\PiCS{X}{S}{K}}})$.
+\begin{cd}
+  	{\bbrkt{E}} && {\bbrkt{\Ga,\PiCS{X}{S}{K}}} \\
+	& {\bbrkt{\Ga}}
+	\arrow["{\bbrkt{\PiCS{X}{S}{K}}}", from=1-3, to=2-2]
+	\arrow["{\bbrkt{\ep}}"', from=1-1, to=2-2]
+	\arrow["{\bbrkt{\ep::f}}", from=1-1, to=1-3]
+\end{cd}
+This in particular gives some object
+\[ \ObjJdg{E}{f}{\PiCS{X}{\ep S}{\brkt{(\ep :: X )K}}} \]
+Weakening and applying \textsc{pi-app-obj} we obtain
+\[ \ObjJdg{\CtxExt{E}{X}{\ep S}}{f X}{{(\ep ::X)K}} \]
+
+\begin{cd}
+  {\bbrkt{E,X: \ep S,Y:( \ep :: X )K}} && {\bbrkt{E,X: \ep S}} && {\bbrkt{E}} \\
+  {\bbrkt{\Ga,X:S,Y:K}} && {\bbrkt{\Ga,X:S}} && {\bbrkt{\Ga}}
+  \arrow["{\bbrkt{ \ep :: X ::Y}}"', from=1-1, to=2-1]
+  \arrow["{\bbrkt{( \ep :: X )K}}", from=1-1, to=1-3]
+  \arrow["{\bbrkt{K}}"', from=2-1, to=2-3]
+  \arrow["{\bbrkt{ \ep S}}", from=1-3, to=1-5]
+  \arrow["{\bbrkt{S}}"', from=2-3, to=2-5]
+  \arrow["{\bbrkt{ \ep :: X }}"{description}, from=1-3, to=2-3]
+  \arrow["{\bbrkt{\ep}}", from=1-5, to=2-5]
+  \arrow["\lrcorner"{anchor=center, pos=0.125, rotate=0}, draw=none, from=1-3, to=2-5]
+  \arrow["\lrcorner"{anchor=center, pos=0.125, rotate=0}, draw=none, from=1-1, to=2-3]
+  \arrow["{\bbrkt{f X}}"', bend right, from=1-3, to=1-1]
+  \arrow[dashed, from=1-3, to=2-1]
+\end{cd}
+
+The dashed arrow is then a morphism in the slice $\CC / \bbrkt{\Ga,X:S}$.
+So we have (making the same argument the other way round and using $\be$ and $\eta$)
+\begin{cd}
+  {\CC/\bbrkt{\CtxExt{\Ga}{X}{S}} \, (\bbrkt{ \ep :: X } , \bbrkt{K})} && {\CC/\bbrkt{\Ga}(\bbrkt{\ep},\bbrkt{{\PiCS{X}{S}{K}}})}
+  \arrow["\textsc{pi-lam-obj}", shift left, from=1-1, to=1-3]
+  \arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
+\end{cd}
+
+This is closer to an adjunction: we can see that the left adjoint should be pullback along
+$\bbrkt{S} : \bbrkt{\CtxExt{\Ga}{X}{S}} \to \bbrkt{\Ga}$.
+Could ask for this bijection to work for arbitrary pullback?
+The answer is \textit{not quite}.
+We can replace the context extension $\bbrkt{\CtxExt{\Ga}{X}{S} \to \bbrkt{\Ga}}$ with a context morphism
+$\bbrkt{\ObjJdg{\De}{\de}{\Ga}}$,
+but we will only be able to find a right adjoint for pullback along $\bbrkt{\de}$ when
+$\De$ \textit{only contains sorts}.
+This is because \textsc{pi-cls} restricts formation of function classes to classes dependent over sorts.
+
+\begin{mathpar}
+  \infer[\textsc{ctx-sort-emp}]{\CtxSortJdg{\bullet}}{}
+
+  \infer[\textsc{ctx-sort-ext}]{\CtxSortJdg{\CtxExt{\Ga}{X}{S}}}{\CtxSortJdg{\Ga} & \ObjJdg{\Ga}{S}{\SortCS}}
+\end{mathpar}
+
+We can also replace $\bbrkt{K}$ with a slice over $\bbrkt{\De}$ so that we have an adjunction
+\begin{cd}
+  {\CC/\bbrkt{\De} \, (\bbrkt{ \de }^* \bbrkt{\ep} , \bbrkt{\ze})} && {\CC/\bbrkt{\Ga}(\bbrkt{\ep},{\Pi_{\bbrkt{\de}}\bbrkt{\ze}})}
+  \arrow["\textsc{pi-lam-obj}", shift left, from=1-1, to=1-3]
+  \arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
+\end{cd}
+Briefly and roughly: Write context $Z = V_{1} : Z_{1}, \cdots, V_{n} : Z_{n}$.
+A slice morphism on the left consists of objects of class $Z_{i}$ in context $E,\De,\EqCS{\Ga}{\ep}{\de}$.
+Repeated $\la$-abstraction gives objects of class $\PiCS{X}{\De}{\PiCS{Y}{\EqCS{\Ga}{\ep}{\de}}{Z_{i}}}$
+in context $E$, on the right hand side.
+So we should define ${\Pi_{\bbrkt{\de}}\bbrkt{\ze}}$ such that its object part is context
+\[
+  \bbrkt{V_{1} : \PiCS{X}{\De}{\PiCS{Y}{\EqCS{\Ga}{\ep}{\de}}{Z_{1}},\cdots, V_{n} : \PiCS{X}{\De}{\PiCS{Y}{\EqCS{\Ga}{\ep}{\de}}{Z_{n}}}}}
+\]
+and its morphism part comes from each $Z_{i}$ being a class in context $\De$.
+The proof that it is an adjunction is in the same vein as before.
+
+\subsection{Universes}
+It is not the case that the category of contexts is a locally cartesian closed category.
+In particular, we have pullbacks but not $\Pi$s for arbitrary morphisms in the category.
+However, the full subcategory of sort-only contexts \textit{is} locally cartesian closed.
+Note that although this subcategory of the syntactic category is an LCCC,
+it is not the case that locally cartesian closed categories are
+fit for semantic purposes due to the substitution/pullback issue addressed later.
+
+
+
+% \begin{align*}
+%   & \ObjJdg{\Ga}{S}{\SortCS}          & \rightsquigarrow & \ObjJdg{\Ga}{\De}{\SortCS} \\
+%   & \CtxExt{\Ga}{X}{S}                & \rightsquigarrow & \De \\
+%   & \ClsJdg{\CtxExt{\Ga}{X}{S}}{K}    & \rightsquigarrow & \ObjJdg{E}{\}{\De} \\
+%   & \ObjJdg{\CtxExt{\Ga}{X}{S}}{O}{K} & \rightsquigarrow & \ObjJdg{\De}{\si}{E} \\
+%   & \ObjJdg{\CtxExt{\Ga}{X}{S}}{O}{K}
+% \end{align*}
+
+% In this category the objects are contexts.
+% In the case of $\STLC$ we could equivalently see contexts as closed classes
+% $\ClsJdg{\bullet}{K}$ by taking the product of all the types appearing in the context.
+
+
+
+
+\bibliography{refs}{}
+\bibliographystyle{alpha}
+\end{document}

@@ -1,0 +1,452 @@
+\message{ !name(LF+Equality_LCCC.tex)}\documentclass{article}
+\usepackage[left=1in,right=1in,tmargin = 25mm,bmargin = 25mm]{geometry}
+\usepackage[left=1in,right=1in]{geometry}
+\usepackage{subfiles}
+\usepackage{amsmath, amssymb, stmaryrd, verbatim, bbm} % math symbols
+\usepackage{amsthm} % thm environment
+\usepackage{mdframed} % Customizable Boxes
+\usepackage{hyperref,nameref,cleveref,enumitem} % for references, hyperlinks
+\usepackage[dvipsnames]{xcolor} % Fancy Colours
+\usepackage{mathrsfs} % Fancy font
+\usepackage{tikz, tikz-cd, float} % Commutative Diagrams
+\usepackage{perpage}
+\usepackage{parskip} % So that paragraphs look nice
+\usepackage{ifthen,xargs} % For defining better commands
+\usepackage{anyfontsize}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tgpagella}
+\usepackage{titlesec}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{proof}
+\usepackage{mathpartir}
+
+% % Parens
+\newcommand{\brkt}[1]{\left(#1\right)}
+\newcommand{\sqbrkt}[1]{\left[#1\right]}
+
+% %
+\newenvironment{intuit}{\textit{Intuition - }\em}{}
+
+% % Types
+\newcommand{\term}{\mathsf{term}}
+\newcommand{\type}{\mathsf{type}}
+\newcommand{\IsOf}[2]{#1 \, : \, #2}
+\newcommand{\Subst}[3]{[#1 / #2] #3}
+\newcommand{\SortCS}{\mathsf{Sort}}
+\newcommand{\PiCS}[3]{\{#1 \, : \, #2\} \, #3}
+\newcommand{\LamCS}[3]{[#1 \, : \, #2] \, #3}
+\newcommand{\ApCS}[2]{#1 \, #2}
+\newcommand{\EqCS}[3]{#2 =_{#1} #3}
+\newcommand{\ReflCS}{\mathsf{refl}}
+\newcommand{\CtxExt}[3]{#1,#2 : #3}
+\newcommand{\BNFSep}{\, \, | \, \,}
+\newcommand{\CtxJdg}[1]{#1 \vdash \mathsf{ctx}}
+\newcommand{\ClsJdg}[2]{#1 \vdash #2 \,\, \mathsf{cls}}
+\newcommand{\ObjJdg}[3]{#1 \vdash #2 \, : \, #3 }
+\newcommand{\EqClsJdg}[3]{\ClsJdg{#1}{#2 = #3}}
+\newcommand{\EqObjJdg}[4]{\ObjJdg{#1}{#2 = #3}{#4}}
+
+% % Proof
+\newenvironment{forward}{($\implies$)}{}
+\newenvironment{backward}{($\limplies$)}{}
+
+% % Ad-hoc Notation
+\DeclareMathOperator{\supp}{supp}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\st}{\,|\,}
+\newcommand{\subs}{\subseteq}
+\newcommand{\nothing}{\varnothing}
+\newcommand{\inv}{^{-1}}
+\renewcommand{\bar}[1]{\overline{#1}}
+\newcommand{\abs}[1]{\left\vert #1 \right\vert}
+\newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\<}{\langle}
+\renewcommand{\>}{\rangle}
+
+% % Greek
+\newcommand{\al}{\alpha}
+\newcommand{\be}{\beta}
+\newcommand{\ga}{\gamma}
+\newcommand{\de}{\delta}
+\newcommand{\ep}{\varepsilon}
+\newcommand{\io}{\iota}
+\newcommand{\ka}{\kappa}
+\newcommand{\la}{\lambda}
+\newcommand{\om}{\omega}
+\newcommand{\si}{\sigma}
+
+\newcommand{\Ga}{\Gamma}
+\newcommand{\De}{\Delta}
+\newcommand{\Th}{\Theta}
+\newcommand{\La}{\Lambda}
+\newcommand{\Si}{\Sigma}
+\newcommand{\Om}{\Omega}
+
+% % Mathbb
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\M}{\mathbb{M}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\V}{\mathbb{V}}
+\newcommand{\U}{\mathbb{U}}
+
+% % Mathcal
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+% % Mathfrak
+\newcommand{\f}[1]{\mathfrak{#1}}
+
+% % Mathrsfs
+\newcommand{\s}[1]{\mathscr{#1}}
+
+% % Category Theory
+\newcommand{\Obj}[1]{\mathrm{Obj}\left(#1\right)}
+\newcommand{\End}[2]{\mathrm{End}_{#1}#2\,}
+\newcommand{\Aut}[2]{\mathrm{Aut}_{#1}#2\,}
+\newcommand{\op}{^{\textsf{op}}}
+\newcommand{\iso}{\cong}
+\newcommand{\id}[1]{\mathbbm{1}_{#1}}
+\newcommand{\hookr}{\hookrightarrow}
+\newcommand{\yo}{\mathbf{y}}
+\newcommand{\INIT}{\mathbf{1}}
+\DeclareMathOperator{\colim}{colim}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\codom}{codom}
+
+\newcommand{\CAT}{\mathbf{Cat}}
+\newcommand{\SET}{\mathbf{Set}}
+\newcommand{\PSH}[1]{\mathbf{PSh}\brkt{#1}}
+\newcommand{\SH}[1]{\mathbf{Sh}\brkt{#1}}
+% \newcommand{\TOP}{\mathbf{Top}}
+%\newcommand{\GRP}{\mathbf{Grp}}
+% \newcommand{\RING}{\mathbf{Ring}}
+% \newcommand{\MOD}[1][R]{#1\text{-}\mathbf{Mod}}
+% \newcommand{\VEC}[1][K]{#1\text{-}\mathbf{Vec}}
+% \newcommand{\ALG}[1][R]{#1\text{-}\mathbf{Alg}}
+
+
+
+% % xcolor
+\definecolor{darkgrey}{gray}{0.10}
+\definecolor{lightgrey}{gray}{0.50}
+\definecolor{slightgrey}{gray}{0.80}
+\definecolor{softblue}{RGB}{30,100,200}
+
+% % hyperref
+\hypersetup{
+      colorlinks = true,
+      linkcolor = {softblue},
+      citecolor = {blue}
+}
+
+\newcommand{\link}[1]{\hypertarget{#1}{}}
+\newcommand{\linkto}[2]{\hyperlink{#1}{#2}}
+
+% Theorems
+
+% % custom theoremstyles
+\newtheoremstyle{definitionstyle}
+{0pt}% above thm
+{0pt}% below thm
+{}% body font
+{}% space to indent
+{\bf}% head font
+{\vspace{1mm}}% punctuation between head and body
+{\newline}% space after head
+{\thmname{#1}\thmnote{\,\,--\,\,#3}}
+
+% % custom theoremstyles
+\newtheoremstyle{propositionstyle}
+{0pt}% above thm
+{0pt}% below thm
+{}% body font
+{}% space to indent
+{\bf}% head font
+{\vspace{1mm}}% punctuation between head and body
+{\newline}% space after head
+{\thmname{#1}\thmnote{\,\,--\,\,#3}}
+
+\newtheoremstyle{exercisestyle}%
+{0pt}% above thm
+{0pt}% below thm
+{\it}% body font
+{}% space to indent
+{\scshape}% head font
+{.}% punctuation between head and body
+{ }% space after head
+{\thmname{#1}\thmnote{ (#3)}}
+
+\newtheoremstyle{remarkstyle}%
+{0pt}% above thm
+{0pt}% below thm
+{}% body font
+{}% space to indent
+{\it}% head font
+{.}% punctuation between head and body
+{ }% space after head
+{\thmname{#1}\thmnote{\,\,--\,\,#3}}
+
+% % Theorem environments
+
+\theoremstyle{definitionstyle}
+\newmdtheoremenv[
+    %skipabove = \baselineskip
+    linewidth = 1.2pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{dfn}{Definition}
+\newmdtheoremenv[
+    linewidth = 1 pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = lightgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{prop}{Proposition}
+\newmdtheoremenv[
+    linewidth = 1 pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = lightgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{cor}{Corollary}
+\newmdtheoremenv[
+    linewidth = 1 pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = lightgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{lem}{Lemma}
+\newmdtheoremenv[
+    linewidth = 1.2pt,
+    leftmargin = 5pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{thm}{Theorem}
+
+\theoremstyle{exercisestyle}
+\newmdtheoremenv[
+    linewidth = 0.7 pt,
+    leftmargin = 20pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{ex}{Exercise}
+\newmdtheoremenv[
+    linewidth = 0.7 pt,
+    leftmargin = 20pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{eg}{Example}
+\newmdtheoremenv[
+    linewidth = 0.7 pt,
+    leftmargin = 20pt,
+    rightmargin = 0pt,
+    linecolor = darkgrey,
+    topline = false,
+    bottomline = false,
+    rightline = false,
+    footnoteinside = true
+]{nttn}{Notation}
+
+\theoremstyle{remarkstyle}
+\newtheorem{rmk}{Remark}
+
+% % footnotes
+\renewcommand{\thempfootnote}{$\dagger$}
+\MakePerPage{footnote}
+
+% % tikzcd diagram
+\newenvironment{cd}{
+    \begin{figure}[H]
+    \centering
+    \begin{tikzcd}
+}{
+    \end{tikzcd}
+    \end{figure}
+}
+
+% % Section titles
+\titlespacing*{\section}
+{0pt}{5ex plus 1ex minus .2ex}{4ex plus .2ex}
+\titlespacing*{\subsection}
+{0pt}{5ex plus 1ex minus .2ex}{4ex plus .2ex}
+
+% Syntax highlighting for lean
+\usepackage{color}
+\definecolor{keywordcolor}{rgb}{0.6, 0.3, 0.6}   % light purple
+\definecolor{tacticcolor}{rgb}{0.2, 0.2, 0.6}    % dark purple
+\definecolor{commentcolor}{rgb}{0.4, 0.4, 0.4}   % grey
+\definecolor{symbolcolor}{rgb}{0.7, 0.2, 0.2}    % blue
+\definecolor{sortcolor}{rgb}{0.2, 0.7, 0.7}      % cyan
+\definecolor{attributecolor}{RGB}{120,0,0}       % maroon
+\definecolor{draculaGrey}{RGB}{25, 27, 15}       % grey
+
+\def\lstlanguagefiles{lstlean.tex}
+
+% set default language
+\lstset{language=lean}
+
+\begin{document}
+
+\message{ !name(LF+Equality_LCCC.tex) !offset(19) }
+\section{An Equational Logical Framework}
+In this section we recall the equational logical framework,
+as described in \cite{harper2021equational}.
+We want this to be minimalistic but sufficiently expressive so that we can define type theories by asserting the rules the type theory
+via a collection of generators, called a signature and denoted $\Si$.
+% We want contexts, classes (aka types), objects (aka terms) in those classes,
+% and judgmental equality between classes and objects.
+We state the syntax and judgment rules for convenience and refer to \cite{harper2021equational} for the details.
+
+\begin{align*}
+  &\textit{variable} \quad X  \\
+  &\textit{expression} \quad O, S, K, e &::= \quad & X \BNFSep \SortCS \BNFSep \PiCS{X}{S}{e}
+                                     \BNFSep \EqCS{S}{O_{0}}{O_{1}} \BNFSep \ReflCS \BNFSep \LamCS{X}{S}{O} \BNFSep \ApCS{O_{0}}{O_{1}} \\
+  &\textit{context} \quad \Ga, \De &::= \quad & \cdot \BNFSep \CtxExt{\Ga}{X}{K}
+\end{align*}
+$O$ indicates this is meant to represent an object
+(though they are all expressions at this point),
+similarly $S$ for sorts and $K$ for classes.
+The agnostic expression symbol $e$ should represent a sort or a class.
+
+The judgments we define are
+\begin{align*}
+  &\CtxJdg{\Ga} && \Ga \text{ is a context }  \\
+  &\ClsJdg{\Ga}{K} && K \text{ is a class in context } \Ga \\
+  &\ObjJdg{\Ga}{O}{K} && O \text{ is an object of class } K
+    \text{ in context } \Ga && \\
+  &\EqClsJdg{\Ga}{K_{0}}{K_{1}} && K_{0}, K_{1}
+    \text{ are equal classes in context } \Ga \\
+  &\EqObjJdg{\Ga}{O_{0}}{O_{1}}{K} && O_{0},O_{1}
+    \text{ are equal objects of class } K
+    \text{ in context } \Ga
+\end{align*}
+
+The legal judgments given by the closure under the following judgment rules
+
+\begin{figure}
+\begin{mathpar}
+  \infer[\textsc{sort-cls}]{\ClsJdg{\Ga}{\SortCS}}{\CtxJdg{\Ga}}
+
+  \infer[\textsc{incl-cls}]{\ClsJdg{\Ga}{S}}{\ObjJdg{\Ga}{S}{\SortCS}}
+
+  \infer[\textsc{pi-cls}]{\ClsJdg{\Ga}{\PiCS{X}{S}{K}}}
+  {\ObjJdg{\Ga}{S}{\SortCS} & \ClsJdg{\CtxExt{\Ga}{X}{S}}{K}}
+
+
+  \infer[\textsc{eq-cls}]{\ClsJdg{\Ga}{\EqCS{S}{O_0}{O_1}}}
+    {\ObjJdg{\Ga}{S}{\SortCS} & \ObjJdg{\Ga}{O_0}{S} & \ObjJdg{\Ga}{O_1}{S}}
+\end{mathpar}
+  \caption{Class formation}
+\end{figure}
+
+\begin{figure}
+\begin{mathpar}
+
+  \infer[\textsc{pi-sort}]{\ObjJdg{\Ga}{\PiCS{X}{S_0}{S_1}}{\SortCS}}
+    {\ObjJdg{\Ga}{S_0}{\SortCS} & \ObjJdg{\CtxExt{\Ga}{X}{S_0}}{S_1}{\SortCS}}
+
+\end{mathpar}
+  \caption{Sort formation}
+\end{figure}
+
+Note that we have no sorts at first.
+We introduce sorts, their objects and associated equations in our signature.
+
+\begin{figure}
+\begin{mathpar}
+
+  \infer[\textsc{pi-lam}]{\ObjJdg{\Ga}{\LamCS{X}{S}{O}}{\PiCS{X}{S}{K}}}
+    {\ObjJdg{\Ga}{S}{\SortCS} & \ObjJdg{\CtxExt{\Ga}{X}{S}}{O}{K}}
+
+  \infer[\textsc{pi-app}]{\ObjJdg{\Ga}{\ApCS{O_0}{O_1}}{\Subst{O_1}{X}{K}}}
+    {\ObjJdg{\Ga}{O_0}{\PiCS{X}{S}{K}} & \ObjJdg{\Ga}{O_1}{S}}
+
+  \infer[\textsc{eq-self}]{\ObjJdg{\Ga}{\bullet}{\EqCS{S}{O}{O}}}
+    {\ObjJdg{\Ga}{O}{S}}
+
+
+
+\end{mathpar}
+  \caption{Object formation}
+\end{figure}
+
+
+Then signatures are defined as contexts $\CtxJdg{\Si}$,
+and the type theory generated by a signature $\Si$ consists of
+legal jusgments over $\Si$.
+
+\begin{align*}
+  &\CtxJdg{\Si\Ga} \\
+  &\ClsJdg{\Si\Ga}{K} \\
+  &\ObjJdg{\Si\Ga}{O}{K} \\
+  &\EqClsJdg{\Si\Ga}{K_{0}}{K_{1}} \\
+  &\EqObjJdg{\Si\Ga}{O_{0}}{O_{1}}{K}
+\end{align*}
+
+
+
+
+\bibliography{refs}{}
+\bibliographystyle{alpha}
+
+\message{ !name(LF+Equality_LCCC.tex) !offset(16) }
+
+\end{document}
