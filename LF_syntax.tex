@@ -62,7 +62,7 @@ and those for judgmental equality (not included).
   {\ObjJdg{\Ga}{S}{\SortCS} & \ClsJdg{\CtxExt{\Ga}{X}{S}}{K}}
 
   \infer[\textsc{eq-cls}]{\ClsJdg{\Ga}{\EqCS{S}{O_0}{O_1}}}
-    {\ObjJdg{\Ga}{S}{\SortCS} & \ObjJdg{\Ga}{O_0}{S} & \ObjJdg{\Ga}{O_1}{S}}
+    {\ObjJdg{\Ga}{O_0}{K} & \ObjJdg{\Ga}{O_1}{K}}
 \end{mathpar}
   \caption{Class formation}
   \label{cls_form}
@@ -90,8 +90,8 @@ and those for judgmental equality (not included).
   \infer[\textsc{pi-app-obj}]{\ObjJdg{\Ga}{\ApCS{O_0}{O_1}}{\Subst{O_1}{X}{K}}}
     {\ObjJdg{\Ga}{O_0}{\PiCS{X}{S}{K}} & \ObjJdg{\Ga}{O_1}{S}}
 
-  \infer[\textsc{eq-self-obj}]{\ObjJdg{\Ga}{\SelfCS}{\EqCS{S}{O}{O}}}
-    {\ObjJdg{\Ga}{O}{S}}
+  \infer[\textsc{eq-self-obj}]{\ObjJdg{\Ga}{\SelfCS}{\EqCS{K}{O}{O}}}
+    {\ObjJdg{\Ga}{O}{K}}
 
   \infer[\textsc{id-obj}]{\ObjJdg{\Ga}{O}{K_1}}
     {\ObjJdg{\Ga}{O}{K_0} & \IdClsJdg{\Ga}{K_0}{K_1}}
@@ -99,6 +99,11 @@ and those for judgmental equality (not included).
   \caption{Object formation}
   \label{obj_form}
 \end{figure}
+
+Note that unlike in \cite{harper2021equational} we have split the equality formation into two rules:
+\textsc{eq-cls} and \textsc{eq-sort},
+since this will give us cleaner semantics.
+
 
 Judgmental equality for classes $\IdClsJdg{\Ga}{K_{0}}{K_{1}}$ and objects
 $\IdObjJdg{\Ga}{O_{0}}{O_{1}}{K}$ are defined to be congruences,
@@ -114,17 +119,20 @@ Note that before introducing a signature we cannot make any sorts,
 nor can we make any interesting objects.
 The only rules for their formation are via \textsc{pi-sort} and \textsc{eq-sort},
 which require more sorts and objects as premises.
-We have added \textsc{eq-sort} in addition to the rules from \cite{harper2021equational},
-since we will need this for the LCCC structure.
 It is the signature that populates \textsf{Sort} with sorts
 and populates those sorts with objects.
 Given a signature $\Si$, we write $\LF{\Si}$ to denote the
 generated type theory.
 
 \begin{align*}
-  &\CtxJdg{\Si\Ga} \\
-  &\ClsJdg{\Si\Ga}{K} \\
-  &\ObjJdg{\Si\Ga}{O}{K} \\
-  &\IdClsJdg{\Si\Ga}{K_{0}}{K_{1}} \\
-  &\IdObjJdg{\Si\Ga}{O_{0}}{O_{1}}{K}
+  &\SiCtxJdg{\Ga} & :=
+  & & & \CtxJdg{\Si,\Ga} \\
+  &\SiClsJdg{\Ga}{K} & :=
+  & & & \ClsJdg{\Si,\Ga}{K} \\
+  &\SiObjJdg{\Ga}{O}{K} & :=
+  & & & \ObjJdg{\Si,\Ga}{O}{K} \\
+  &\SiIdClsJdg{\Ga}{K_{0}}{K_{1}} & :=
+  & & & \IdClsJdg{\Si,\Ga}{K_{0}}{K_{1}} \\
+  &\SiIdObjJdg{\Ga}{O_{0}}{O_{1}}{K} & :=
+  & & & \IdObjJdg{\Si,\Ga}{O_{0}}{O_{1}}{K}
 \end{align*}

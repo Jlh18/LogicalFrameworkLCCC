@@ -1,0 +1,76 @@
+\section{Categorical definitions}
+
+\begin{dfn}[Cartesian closed category (CCC)]
+  \link{dfn_CCC}
+  We say a category $\CC$ is cartesian closed when
+  \begin{itemize}
+    \item $\CC$ has finite products
+    \item For each $\CC$-object $A$, the product with $A$ functor $\times A : \CC \to \CC$ has a right adjoint.
+  \end{itemize}
+  We denote the right adjoint by $[A,-]$ and call it internal hom.
+\end{dfn}
+
+\begin{dfn}[Locally cartesian closed category (LCCC)]
+  We say a category $\CC$ is locally cartesian closed when either of the equivalent definitions hold
+  \begin{enumerate}
+    \item Every slice category $\CC / A$ over a $\CC$-object $A$ is cartesian closed.
+    \item $\CC$ has pullbacks, and for each morphism $f : B \to A$ in $\CC$,
+          the base change (pullback along $f$) $f^{*} : \CC / A \to \CC / B$ has a right adjoint.
+  \end{enumerate}
+  We denote the right adjoint to base change by $\Pi_{f}$.
+\end{dfn}
+
+We do not show that these two definitions are equivalent.
+The idea is that existence of pullbacks correspond to existence of products in slices
+and $\Pi$s correspond to internal homs in slices.
+
+The following definition is an adaptation of \textit{universes in a topos} from \cite{streicher}.
+
+\begin{dfn}[LCCC-universe]
+  \link{dfn_lccc_universe}
+  Let $\CC$ be a category, and $\SS$ a set of morphisms in $\CC$.
+  We may denote morphisms in $\SS$ by $S : \Ga,S \to \Ga$ or $\si : \De \to \Ga$,
+  though this is just notation.
+  We say $\SS$ is an LCCC-universe when
+  \begin{enumerate}
+    \item $\SS$ is stable under $\CC$-pullbacks,
+          i.e. if $\de : \De \to \Ga$ is in $\CC$ and $S : \Ga,S \to \Ga$ is in $\SS$ and we have pullback
+          \[\begin{tikzcd}
+            {\De,\de^* S} & {\Ga,S} \\
+            \De & \Ga
+            \arrow["S", from=1-2, to=2-2]
+            \arrow["{\de^* S}"', from=1-1, to=2-1]
+            \arrow["\de"', from=2-1, to=2-2]
+            \arrow[from=1-1, to=1-2]
+            \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+          \end{tikzcd}
+          \quad \quad \text{ then } \quad \quad \de^{*}S \in \SS\]
+    \item $\SS$ is closed under identities, i.e. if $\si : \De \to \Ga$ is in $\SS$ then
+          so are $\id{\De}$ and $\id{\Ga}$.
+    \item $\SS$ is closed under composition (aka $\Si$s), i.e. if
+          \[\begin{tikzcd}
+              {\Ga,S,T} & {\Ga,S} & \Ga
+              \arrow["T", from=1-1, to=1-2]
+              \arrow["\in \SS"', from=1-1, to=1-2]
+              \arrow["S", from=1-2, to=1-3]
+              \arrow["\in \SS"', from=1-2, to=1-3]
+            \end{tikzcd}
+          \quad \quad \text{ then } \quad \quad \Si_{S} T := S \circ T \in \SS\]
+    \item $\SS$ is closed under $\Pi$s, i.e. if $S : \Ga,S \to \Ga$ is in $\SS$
+          then pullback $S^{*} : \CC / \Ga \to \CC / \Ga,S$ exists and has right
+          adjoint $\Pi_{S} : \CC / \Ga,S \to \CC / \Ga$, and
+            \[\begin{tikzcd}
+              {\Ga,S,T} & {\Ga,S} & \Ga
+              \arrow["T", from=1-1, to=1-2]
+              \arrow["\in \SS"', from=1-1, to=1-2]
+              \arrow["S", from=1-2, to=1-3]
+              \arrow["\in \SS"', from=1-2, to=1-3]
+            \end{tikzcd}
+          \quad \quad \text{ then } \quad \quad \Pi_{S} T \in \SS\]
+  \end{enumerate}
+
+  Note that the first four conditions combined result in $\SS$ forming a subcategory of $\CC$ that is an LCCC.
+  Note that $2$ is different from and an extra condition $5$ is given in
+  the definition of \textit{universe in a topos} given in \cite{streicher},
+  We address this \linkto{dfn_universe}{later}.
+\end{dfn}
