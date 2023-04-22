@@ -1,40 +1,5 @@
 \section{An Equational Logical Framework}
-In this section we recall the equational logical framework,
-as described in \cite{harper2021equational} (with some minor changes).
-We want this to be minimalistic but sufficiently expressive so that we can define type theories by asserting the rules the type theory
-via a collection of generators, called a signature and denoted $\Si$.
-% We want contexts, classes (aka types), objects (aka terms) in those classes,
-% and judgmental equality between classes and objects.
-We state the syntax and judgment rules for convenience and refer to \cite{harper2021equational} for the details.
-
-\begin{align*}
-  &\textit{variable} \quad X  \\
-  &\textit{expression} \quad O, S, K, e &::= \quad & X \BNFSep \SortCS \BNFSep \PiCS{X}{S}{e}
-                                     \BNFSep \EqCS{S}{O_{0}}{O_{1}} \BNFSep \SelfCS \BNFSep \LamCS{X}{S}{O} \BNFSep \ApCS{O_{0}}{O_{1}} \\
-  &\textit{context} \quad \Ga, \De &::= \quad & \cdot \BNFSep \CtxExt{\Ga}{X}{K}
-\end{align*}
-$O$ indicates this is meant to represent an object
-(though they are all expressions at this point),
-similarly $S$ for sorts and $K$ for classes.
-The agnostic expression symbol $e$ should represent a sort or a class.
-
-The judgments we define are
-\begin{align*}
-  &\CtxJdg{\Ga} && \Ga \text{ is a context }  \\
-  &X:K \in \Ga && X:K \text{ appears in context } \Ga \\
-  &\ClsJdg{\Ga}{K} && K \text{ is a class in context } \Ga \\
-  &\ObjJdg{\Ga}{O}{K} && O \text{ is an object of class } K
-    \text{ in context } \Ga && \\
-  &\IdClsJdg{\Ga}{K_{0}}{K_{1}} && K_{0}, K_{1}
-    \text{ are equal classes in context } \Ga \\
-  &\IdObjJdg{\Ga}{O_{0}}{O_{1}}{K} && O_{0},O_{1}
-    \text{ are equal objects of class } K
-    \text{ in context } \Ga
-\end{align*}
-
-The legal judgments given by the closure under the judgment rules
-in figures \ref{ctx_form}, \ref{cls_form}, \ref{sort_form}, \ref{obj_form},
-and those for judgmental equality (not included).
+\link{sec_2}
 
 \begin{figure}[h]
 \begin{mathpar}
@@ -61,8 +26,8 @@ and those for judgmental equality (not included).
   \infer[\textsc{pi-cls}]{\ClsJdg{\Ga}{\PiCS{X}{S}{K}}}
   {\ObjJdg{\Ga}{S}{\SortCS} & \ClsJdg{\CtxExt{\Ga}{X}{S}}{K}}
 
-  \infer[\textsc{eq-cls}]{\ClsJdg{\Ga}{\EqCS{S}{O_0}{O_1}}}
-    {\ObjJdg{\Ga}{O_0}{K} & \ObjJdg{\Ga}{O_1}{K}}
+  % \infer[\textsc{eq-cls}]{\ClsJdg{\Ga}{\EqCS{S}{O_0}{O_1}}}
+  %   {\ObjJdg{\Ga}{O_0}{K} & \ObjJdg{\Ga}{O_1}{K}}
 \end{mathpar}
   \caption{Class formation}
   \label{cls_form}
@@ -93,24 +58,111 @@ and those for judgmental equality (not included).
   \infer[\textsc{eq-self-obj}]{\ObjJdg{\Ga}{\SelfCS}{\EqCS{K}{O}{O}}}
     {\ObjJdg{\Ga}{O}{K}}
 
-  \infer[\textsc{id-obj}]{\ObjJdg{\Ga}{O}{K_1}}
+  \infer[\textsc{je-obj}]{\ObjJdg{\Ga}{O}{K_1}}
     {\ObjJdg{\Ga}{O}{K_0} & \IdClsJdg{\Ga}{K_0}{K_1}}
 \end{mathpar}
   \caption{Object formation}
   \label{obj_form}
 \end{figure}
 
-Note that unlike in \cite{harper2021equational} we have split the equality formation into two rules:
-\textsc{eq-cls} and \textsc{eq-sort},
-since this will give us cleaner semantics.
+\begin{figure}
+  \begin{mathpar}
+  \infer[\textsc{cls-rfl}]{\IdClsJdg{\Ga}{K}{K}}{\ClsJdg{\Ga}{K}}
 
+  \infer[\textsc{cls-st}]{\IdClsJdg{\Ga}{K_0}{K_1}}
+    {\IdClsJdg{\Ga}{K_0}{K_2} && \IdClsJdg{\Ga}{K_1}{K_2}}
+
+  \infer[\textsc{obj-rfl}]{\IdObjJdg{\Ga}{O}{O}{K}}{\ObjJdg{\Ga}{O}{K}}
+
+  \infer[\textsc{obj-st}]{\IdObjJdg{\Ga}{O_0}{O_1}{K}}
+    {\IdObjJdg{\Ga}{O_0}{O_2}{K} && \IdObjJdg{\Ga}{O_1}{O_2}{K}}
+
+  \infer[\textsc{obj-je-cls}]{\IdObjJdg{\Ga}{O_0}{O_1}{K_1}}{\IdObjJdg{\Ga}{O_0}{O_1}{K_0} && \IdClsJdg{\Ga}{K_0}{K_1}}
+      \end{mathpar}
+
+      \begin{mathpar}
+  \infer[\textsc{app-lam}]{\IdObjJdg{\Ga}{(\LamCS{X}{S}{O_0}) O_1}{\Subst{O_1}{X}{O_0}}
+      {\Subst{O_1}{X}{K}}}{\ObjJdg{\CtxExt{\Ga}{X}{S}}{O_0}{K} && \ObjJdg{\Ga}{O_1}{S}}
+
+    \infer[\textsc{lam-app}]{\IdObjJdg{\Ga}{O}{\LamCS{X}{S}{(O X)}}{\PiCS{X}{S}{K}}}{\ObjJdg{\Ga}{O}{\PiCS{X}{S}{K}}}
+
+    \infer[\textsc{reflection}]{\IdObjJdg{\Ga}{O_1}{O_2}{S}}{\ObjJdg{\Ga}{O_0}{\EqCS{S}{O_1}{O_2}}}
+
+    \infer[\textsc{unicity}]{\IdObjJdg{\Ga}{O_0}{O_3}{\EqCS{S}{O_1}{O_2}}}
+      {\ObjJdg{\Ga}{O_0}{\EqCS{S}{O_1}{O_2}} && \ObjJdg{\Ga}{O_3}{\EqCS{S}{O_1}{O_2}}}
+
+      \end{mathpar}
+
+      \begin{mathpar}
+  \infer[\textsc{je-incl-cls}]{\IdClsJdg{\Ga}{S_0}{S_1}}{\IdObjJdg{\Ga}{S_0}{S_1}{\SortCS}}
+
+  \infer[\textsc{je-pi-cls}]{\IdClsJdg{\Ga}{\PiCS{X}{S_0}{K_0}}{\PiCS{X}{S_1}{K_1}}}
+  {\IdObjJdg{\Ga}{S_0}{S_1}{\SortCS} & \IdClsJdg{\CtxExt{\Ga}{X}{S_0}}{K_0}{K_1}}
+
+    \infer[\textsc{je-pi-sort}]{\IdObjJdg{\Ga}{\PiCS{X}{S_0}{S_2}}{\PiCS{X}{S_1}{S_3}}{\SortCS}}
+    {\IdObjJdg{\Ga}{S_0}{S_1}{\SortCS} & \IdObjJdg{\CtxExt{\Ga}{X}{S_0}}{S_2}{S_3}{{\SortCS}}}
+
+  \infer[\textsc{je-eq-sort}]{\IdObjJdg{\Ga}{\EqCS{S_0}{O_0}{O_2}}{\EqCS{S_0}{O_1}{O_3}}{\SortCS}}
+    {\IdObjJdg{\Ga}{S_0}{S_1}{\SortCS} & \IdObjJdg{\Ga}{O_0}{O_1}{S_0} & \IdObjJdg{\Ga}{O_2}{O_3}{S_1}}
+
+  \infer[\textsc{je-pi-lam-obj}]{\IdObjJdg{\Ga}{\LamCS{X}{S_0}{O}}{\LamCS{X}{S_1}{O_1}}{\PiCS{X}{S_0}{K}}}
+    {\IdObjJdg{\Ga}{S_0}{S_1}{\SortCS} & \IdObjJdg{\CtxExt{\Ga}{X}{S_0}}{O_0}{O_1}{K}}
+
+  \infer[\textsc{je-pi-app-obj}]{\IdObjJdg{\Ga}{\ApCS{O_0}{O_2}}{\ApCS{O_1}{O_3}}{\Subst{O_2}{X}{K}}}
+    {\IdObjJdg{\Ga}{O_0}{O_1}{\PiCS{X}{S}{K}} & \IdObjJdg{\Ga}{O_2}{O_3}{S}}
+  \end{mathpar}
+  \caption{Judgmental equality}
+  \label{id_form}
+\end{figure}
+
+In this section we recall the equational logical framework,
+as described in \cite{harper2021equational} (with some minor changes).
+This LF can be used to define a wide variety of type theories,
+including dependent type theories such as Martin L{\"o}f type theory or
+\textsf{ModTT} \cite{Sterling_2021}.
+Within the LF we define type theories by asserting the rules of the type theory
+via a collection of generators, called a signature and denoted $\Si$.
+We state only state the syntax and judgment rules
+and refer to \cite{harper2021equational} for details and examples.
+
+\begin{align*}
+  &\textit{variable} \quad & X {\color{white} ::=} \quad & \\
+  &\textit{expression} \quad & O, S, K, e ::= \quad & X \BNFSep \SortCS \BNFSep \PiCS{X}{S}{e}
+                                     \BNFSep \EqCS{S}{O_{0}}{O_{1}} \BNFSep \SelfCS \BNFSep \LamCS{X}{S}{O} \BNFSep \ApCS{O_{0}}{O_{1}} \\
+  &\textit{context} \quad & \Ga, \De ::= \quad & \cdot \BNFSep \CtxExt{\Ga}{X}{K}
+\end{align*}
+$O$ indicates expressions representing objects
+(though just an expression at this point),
+similarly $S$ represents sorts and $K$ represents classes.
+The agnostic expression symbol $e$ represents sorts or a classes.
+
+The judgments we define are
+\begin{align*}
+  &\CtxJdg{\Ga} && \Ga \text{ is a context }  \\
+  &X:K \in \Ga && X:K \text{ appears in context } \Ga \\
+  &\ClsJdg{\Ga}{K} && K \text{ is a class in context } \Ga \\
+  &\ObjJdg{\Ga}{O}{K} && O \text{ is an object of class } K
+    \text{ in context } \Ga && \\
+  &\IdClsJdg{\Ga}{K_{0}}{K_{1}} && K_{0}, K_{1}
+    \text{ are equal classes in context } \Ga \\
+  &\IdObjJdg{\Ga}{O_{0}}{O_{1}}{K} && O_{0},O_{1}
+    \text{ are equal objects of class } K
+    \text{ in context } \Ga
+\end{align*}
+
+The legal judgments given by the closure under the judgment rules
+in figures \ref{ctx_form}, \ref{cls_form}, \ref{sort_form}, \ref{obj_form},
+\ref{id_form}.
+
+Note that unlike in \cite{harper2021equational} we have \textsc{eq-sort}
+creating a sort rather than a class.
+This will ensure one of our display categories is an LCCC.
 
 Judgmental equality for classes $\IdClsJdg{\Ga}{K_{0}}{K_{1}}$ and objects
 $\IdObjJdg{\Ga}{O_{0}}{O_{1}}{K}$ are defined to be congruences,
 i.e. equivalence relations that respect formation of classes,
 sorts, and objects.
 Furthermore, we have $\be$ and $\eta$ rules for \textsc{pi}.
-See \cite{harper2021equational} for details. %% Add these in
 
 Finally, signatures are defined as contexts $\CtxJdg{\Si}$,
 and the type theory generated by a signature $\Si$ consists of

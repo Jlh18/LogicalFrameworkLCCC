@@ -1,24 +1,18 @@
-\section{The syntactic category}
+\section{The category of contexts}
 
-We want to find categorical semantics for our type theory.
-This amounts to one of two equivalent things
-\begin{itemize}
-  \item View each aspect of the type theory in a category $\CC$
-  \item Construct a syntactic category which will be the ``category of contexts''
-        and take semantics to be anything that imitates it (in a Platonic form sense).
-\end{itemize}
-We will take the latter approach and construct the category of contexts.
+I order to find categorical semantics for a type theory
+it is useful to study the category of contexts.
+In this section we construct the category of contexts.
 We will call this category $\CC$ for the rest of this section.
 
-We begin this section by recalling $\STLC$,
-a simply typed $\la$-calculus with only unit, product and function classes.
+We begin by recalling $\STLC$,
+simply typed $\la$-calculus with only unit, product and function classes.
 And use intuition of its categorical semantics to motivate those for logical frameworks.
-
-Recall $\STLC$ can be interpreted in a \linkto{dfn_CCC}{CCC} $\DD$ by
+Recall that $\STLC$ can be interpreted in a \linkto{dfn_CCC}{CCC} $\DD$ by
 taking classes $K$ as $\DD$-objects $\bbrkt{K}$,
 contexts $\CtxExt{X_{1}:K_{1},\dots}{X_{n}}{K_{n}}$
 as products $\bbrkt{K_{1}} \tdt \bbrkt{K_{n}}$,
-and objects $\ObjJdg{\Ga}{K}{O}$ as morphisms $\bbrkt{O} : \bbrkt{\Ga} \to \bbrkt{K}$. % % Ref needed
+and objects $\ObjJdg{\Ga}{K}{O}$ as morphisms $\bbrkt{O} : \bbrkt{\Ga} \to \bbrkt{K}$.
 This seems quite natural, since product classes become products,
 and function classes become internal homs in the semantics.
 If we are to immitate this for $\LF{\Si}$,
@@ -33,7 +27,8 @@ Then any dependent class can be viewed as a context, which can be viewed as a cl
 
 Instead of including dependent pairs,
 let us view dependent classes $\ClsJdg{\Ga}{K}$ as extended contexts
-$\CtxExt{\Ga}{X}{K}$, and take \textit{contexts} as $\CC$-objects,
+$\CtxExt{\Ga}{X}{K}$, and take \textit{contexts}
+(\linkto{up_to_jdg_eq}{up to judgmental equality}) as $\CC$-objects,
 and \textit{as a consequence} dependent classes as $\CC$-objects.
 
 \begin{multicols}{2}
@@ -45,7 +40,8 @@ and \textit{as a consequence} dependent classes as $\CC$-objects.
   }
 \end{multicols}
 
-It is then natural to define morphisms of contexts (aka a substitution),
+It is then natural to define morphisms of contexts (aka a substitution)
+(\linkto{up_to_jdg_eq}{up to judgmental equality}),
 denoted $\ObjJdg{\Ga}{\si}{\De}$,
 consisting of the data of objects
 
@@ -106,10 +102,38 @@ We can informally identify use the slice-object $\bbrkt{\ClsJdg{\Ga}{K}}$ to den
   }
 \end{multicols}
 
+\subsection{Judgmental Equality}
+\link{up_to_jdg_eq}
+Technically we should we taking $\CC$-objects to be the
+set of contexts quotiented by the equivalence relation induced by judgmental equality on classes,
+i.e. $\CtxExt{{X_{1} : K_{1}},\cdots}{X_{n}}{K_{n}} \sim \CtxExt{{Y_{1} : K'_{1}},\cdots}{Y_{n}}{K'_{n}}$
+if and only if
+\begin{align*}
+  \IdClsJdg{\bullet}{K_{1}}{K'_{1}}\\
+  \IdClsJdg{X_{1} : K_{1}}{K_{2}}{K'_{2}}\\
+  \vdots \quad \quad \quad \quad \quad \quad  \\
+  \IdClsJdg{\CtxExt{{X_{1} : K_{1}},\cdots}{X_{n-1}}{K_{n-1}}}{K_{n}}{K'_{n}}
+\end{align*}
+We always denote an equivalence class using a representative $\bbrkt{\Ga}$,
+and omit the quotient-related proofs.
+
+We should also be taking $\CC$-morphisms from $\bbrkt{\Ga}$ to $\bbrkt{\De}$
+to be substitutions quotiented by the equivalence relation induced by judgmental equality on terms,
+i.e. $\ObjJdg{\Ga}{\si}{\De} \sim \ObjJdg{E}{\rho}{Z}$ if and only if $\bbrkt{\Ga} = \bbrkt{E}$ and
+$\bbrkt{\De} = \bbrkt{Z}$ and
+\begin{align*}
+  &\IdObjJdg{\Ga}{\si_{1}}{\rho_{1}}{K_{1}}\\
+  &\IdObjJdg{\Ga}{\si_{2}}{\rho_{2}}{\Subst{\si_{1}}{X_{1}}{K_{2}}}\\
+  &\vdots & \text{ when } \De = \CtxExt{X_{1}:K_{1}}{\cdots, X_{n}}{K_{n}}\\
+  &\IdObjJdg{\Ga}{\si_{n}}{\rho_{n}}{\Subst{\si_{n-1}}{X_{n-1}}{\cdots \Subst{\si_{1}}{X_{1}}{K_{n}}}}
+\end{align*}
+Likewise, we always denote an equivalence class using a representative $\bbrkt{\si}$,
+and omit the quotient-related proofs.
+
 \subsection{Objects}
 
 In the $\STLC$ case we interpreted objects
-$\ObjJdg{\Ga}{K}{O}$ as morphisms $\bbrkt{O} : \bbrkt{\Ga} \to \bbrkt{K}$.
+$\ObjJdg{\Ga}{O}{K}$ as morphisms $\bbrkt{O} : \bbrkt{\Ga} \to \bbrkt{K}$.
 Since the classes are now dependent,
 and the object is situated in some context,
 we should upgrade this to a morphism in the slice $\CC / \bbrkt{\Ga}$.
@@ -131,11 +155,13 @@ we should upgrade this to a morphism in the slice $\CC / \bbrkt{\Ga}$.
 \end{multicols}
 
 We can call $\bbrkt{\ObjJdg{\Ga}{O}{K}}$
-a section of the bundle $\bbrkt{\ClsJdg{\Ga}{K}}$
-in the sense that for any collection of objects $O_{1},\cdots,O_{n}$ in the classes from $\Ga$,
+a \textit{section} of the \textit{bundle} $\bbrkt{\ClsJdg{\Ga}{K}}$.
+This is a bundle in the sense that for any collection of objects $O_{1},\cdots,O_{n}$ in the classes from $\Ga$,
 there is a closed class \[\ClsJdg{\bullet}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{K}}\]
+which is the \textit{fiber} over that collection of objects.
 A section of the bundle then picks out for any such collection of objects,
-an object \[\ObjJdg{\bullet}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{O}}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{K}}\]
+an object in the \textit{fiber}
+\[\ObjJdg{\bullet}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{O}}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{K}}\]
 \begin{multicols}{2}
 
     \[\color{syntax}  \infer[\textsc{var-obj}]{\ObjJdg{\Ga}{X}{K}}
@@ -155,14 +181,14 @@ an object \[\ObjJdg{\bullet}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{O}}{[O_{n
 
 We may also write $\bbrkt{K}$ to mean $\bbrkt{\ClsJdg{\Ga}{K}}$ for brevity.
 
-\subsection{Substitution}
+\subsection{Substitution action on classes and objects}
 
 Context morphisms (aka substitutions) are dependent tuples of objects,
 just as contexts are dependent tuples of classes.
 They can be {\color{semantics} composed}, which we can view as {\color{syntax} sequential substitution}.
-They can induce {\color{syntax} substitutions on dependent classes},
+They have an {\color{syntax} action on dependent classes},
 which we will show corresponds to {\color{semantics} pullback of bundles}.
-They can induce {\color{syntax} substitution on objects} (more generally {\color{syntax} substitution on substitutions}),
+They have an {\color{syntax} action on objects} (more generally {\color{syntax} action on other substitutions}),
 which we will show corresponds to {\color{semantics} pullback of sections}
 (more generally {\color{semantics} existence of all pullbacks}).
 
@@ -195,8 +221,8 @@ This says we have a pullback
 
 \end{multicols}
 
-To check the diagram commutes, we use a notion of judgmental equality between substitutions,
-which we can define component-wise by judgmental equality between objects.
+To check the diagram commutes, we need to check judgmental equality component-wise
+(opening up the equivalence class definition).
 For the universal property we need to apply (syntactic) substitution on objects.
 
 Now suppose $\ObjJdg{\De}{O}{K}$.
@@ -254,9 +280,41 @@ So we have
 
 There is a techincal issue here about substitution not working out in a general LCCC,
 because of pullback only being unique up to isomorphism.
-We delay this issue until later,
-and assume strict pullbacks,
-i.e. all pullbacks in $\CC$ of the same diagram are equal. %% reference + link to later
+However, in the syntax category we have ``strict pullbacks''.
+
+
+\subsection{Strict pullbacks}
+\link{strict_pullbacks}
+
+The previous construction of the pullback $\bbrkt{K} \mapsto \bbrkt{\si} \mapsto (\bbrkt{\si K},\bbrkt{\si :: X})$
+defines a strictly equal diagram.
+\[ \bbrkt{\si}^{*} \bbrkt{\rho}^{*} \bbrkt{K} = \bbrkt{\si (\rho K)} =
+   \bbrkt{(\si \gg \rho) K} = \brkt{\bbrkt{\rho} \circ \bbrkt{\si}}^{*} \bbrkt{K}\]
+
+% https://q.uiver.app/?q=WzAsOSxbMiwxLCJcXEdhXzEsXFxyaG8gSyJdLFsyLDIsIlxcR2FfMSJdLFszLDEsIlxcR2FfMixLIl0sWzMsMiwiXFxHYV8yIl0sWzEsMSwiXFxHYV8wLFxcc2kgXFxyaG8gSyJdLFsxLDIsIlxcR2FfMCJdLFswLDBdLFswLDIsIlxcR2FfMCJdLFswLDEsIlxcR2FfMCwoXFxzaSBcXGdnIFxccmhvKSBLIl0sWzAsMSwiXFxyaG8gSyJdLFswLDJdLFsyLDMsIksiXSxbMSwzLCJcXHJobyIsMl0sWzAsMywiIiwxLHsic3R5bGUiOnsibmFtZSI6ImNvcm5lciJ9fV0sWzQsMF0sWzQsNSwiXFxzaSBcXHJobyBLIiwyXSxbNCwxLCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XSxbNSwxLCJcXHNpIiwyXSxbNyw1LCI9IiwxXSxbOCw3LCIoXFxzaSBcXGdnIFxccmhvKSBLID0iXSxbOCw0LCI9IiwxXSxbOCw1LCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XV0=
+\[\begin{tikzcd}
+	{} \\
+	{\Ga_0,(\si \gg \rho) K} & {\Ga_0,\si \rho K} & {\Ga_1,\rho K} & {\Ga_2,K} \\
+	{\Ga_0} & {\Ga_0} & {\Ga_1} & {\Ga_2}
+	\arrow["{\rho K}", from=2-3, to=3-3]
+	\arrow[from=2-3, to=2-4]
+	\arrow["K", from=2-4, to=3-4]
+	\arrow["\rho"', from=3-3, to=3-4]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=2-3, to=3-4]
+	\arrow[from=2-2, to=2-3]
+	\arrow["{\si \rho K}" {name=0}, from=2-2, to=3-2]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=2-2, to=3-3]
+	\arrow["\si"', from=3-2, to=3-3]
+	\arrow["{=}"{description}, from=3-1, to=3-2]
+	\arrow["{(\si \gg \rho) K}"' {name=1}, from=2-1, to=3-1]
+	\arrow["{=}"{description}, from=2-1, to=2-2]
+  \arrow["{=}"{description}, draw=none, from=1, to=0]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=2-1, to=3-2]
+\end{tikzcd}\]
+
+
+Note that in general categories (including LCCCs) the pullback along a composition is only
+necessarily isomorphic to double pullback.
 
 \subsection{Dependent function classes}
 
@@ -393,14 +451,8 @@ In particular, we don't have pullbacks for arbitrary morphisms in the category;
 the closest we got was over a context with only sorts.
 However, we can find a subcategory that \textit{is} locally cartesian closed,
 which essentially consists of context extentions, where the extensions only introduce sorts.
-This subcategory will be an \linkto{dfn_lccc_universe}{LCCC-universe},
-which we specify by giving a set of $\CC$-morphisms $\SS_{\Pi}$.
-
-% I don't think this is the right place for this comment. Maybe move to introduction
-Note that although this subcategory of the syntactic category is an LCCC,
-it is not the case that locally cartesian closed categories are
-fit for semantic purposes due to the \linkto{strict_pullbacks}{substitution/pullback} issue addressed later.
-% might want to also clarify what is LCCC and what is not in introduction
+This subcategory will be generated by a set $\SS_{\Pi}$ that is a
+set of \linkto{dfn_display_map}{display maps}.
 
 We know that for contexts extended with sorts $\bbrkt{S} : \bbrkt{\CtxExt{\Ga}{X}{S}} \to \bbrkt{\Ga}$
 we have the adjunction $\bbrkt{S}^{*} \dashv \Pi_{\bbrkt{S}}$.

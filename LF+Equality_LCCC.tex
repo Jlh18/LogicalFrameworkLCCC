@@ -372,19 +372,29 @@
 
 \section{Overview}
 
-\begin{itemize}
-  \item Introduce LF with equality. Closely follow \cite{harper2021equational}
-  \item Introduce the categorical way of looking at the type formers (motivational)
-  \item Construct category of contexts formally
-  \item General model of LF in an LCCC
-  \item Lawvere style correspondence
-\end{itemize}
+In \linkto{sec_2}{section 2}, we present the syntax for
+an \textit{equational logical framework} (LF for short).
+In \linkto{sec_3}{section 3}, we set out the main categorical
+definitions that are relevant to the discussion.
+In \linkto{sec_4}{section 4}, we describe the category of contexts
+for the LF.
+The main goal is to identify two display map subcategories of the category of contexts,
+$S_{\pi}$.
 
-In the first section, we present an \textit{equational logical framework} as in \cite{harper2021equational},
-which can be used to define dependent type theories such as Martin L{\"o}f type theory or
-\textsf{ModTT} \cite{Sterling_2021}.
+\subsection{Potential points of confusion}
+It is \textit{not true} that the category of contexts $\CC$ for the LF is locally Cartesian closed.
+However, we can find two display map subcategories
+$\SS_{\Pi} \hookr \SS_{\Pi,=} \hookr \CC$
+that are locally Cartesian closed,
+and these correspond to the $\SortCS$ or universe for the LF.
+It is \textit{not true} that general locally closed Cartesian categories are suitable general
+semantics for the LF, or even for the subcategory, due to coherence issues for pullback.
+For general semantics, we should use categories with families \cite{castellan2020categories},
+categories with attributes \cite{JACOBS1993169},
+or natural models \cite{awodey2017natural}.
+One can verify that the category of contexts satisfies any of these semantics.
 
-\subsection{Notation}
+\subsection{Terminology}
 
 We follow \cite{harper2021equational} and use the word ``class'' for what is usually called ``type'' and
 the word ``object'' for what is usually called ``term''.
@@ -393,16 +403,18 @@ and types internal to the type theory defined in the logical framework.
 To not confuse this with the categorical notion of object,
 we will write $\CC$-object for an object in a category $\CC$.
 
+
 \input{LF_syntax.tex}
 
 \input{categorical_def.tex}
 
 \input{syntactic_category.tex}
 
+\section{Extensions}
+
+Let us return to studying $\SS_{\Pi}$ and $\SS_{\Pi,=}$.
 
 
-\subsection{Strict pullbacks}
-\link{strict_pullbacks}
 
 % \begin{align*}
 %   & \ObjJdg{\Ga}{S}{\SortCS}          & \rightsquigarrow & \ObjJdg{\Ga}{\De}{\SortCS} \\
