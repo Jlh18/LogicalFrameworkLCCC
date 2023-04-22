@@ -1,0 +1,126 @@
+\section{Categorical definitions}
+
+\begin{dfn}[Cartesian closed category (CCC)]
+  \link{dfn_CCC}
+  We say a category $\CC$ is cartesian closed when
+  \begin{itemize}
+    \item $\CC$ has finite products
+    \item For each $\CC$-object $A$, the product with $A$ functor $\times A : \CC \to \CC$ has a right adjoint.
+  \end{itemize}
+  We denote the right adjoint by $[A,-]$ and call it internal hom.
+\end{dfn}
+
+\begin{dfn}[Locally cartesian closed category (LCCC)]
+  We say a category $\CC$ is locally cartesian closed when either of the following equivalent definitions hold
+  \begin{enumerate}
+    \item Every slice category $\CC / A$ over a $\CC$-object $A$ is cartesian closed.
+    \item $\CC$ has pullbacks, and for each morphism $f : B \to A$ in $\CC$,
+          the base change (pullback along $f$) $f^{*} : \CC / A \to \CC / B$ has a right adjoint.
+  \end{enumerate}
+  We denote the right adjoint to base change by $\Pi_{f}$.
+\end{dfn}
+
+We do not show that these two definitions are equivalent.
+The idea is that existence of pullbacks correspond to existence of products in slices
+and $\Pi$s correspond to internal homs in slices.
+
+% https://q.uiver.app/?q=WzAsNSxbMywwLCJcXENDL0EiXSxbMywxLCJcXENDL0IiXSxbMywyLCJcXENDL0EiXSxbMCwxLCJCIl0sWzEsMSwiQSJdLFswLDEsImZeKiIsMix7Im9mZnNldCI6Mn1dLFsxLDAsIlxcUGlfZiIsMix7Im9mZnNldCI6Mn1dLFsxLDIsIlxcU2lfZiIsMix7Im9mZnNldCI6Mn1dLFsyLDEsImZeKiIsMix7Im9mZnNldCI6Mn1dLFswLDIsIlxcdGltZXMgZiIsMSx7ImN1cnZlIjo0fV0sWzIsMCwiLV5mIiwxLHsiY3VydmUiOjV9XSxbMyw0LCJmIl0sWzUsNiwiIiwyLHsibGV2ZWwiOjEsInN0eWxlIjp7Im5hbWUiOiJhZGp1bmN0aW9uIn19XV0=
+\[\begin{tikzcd}
+	&&& {\CC/A} \\
+	B & A && {\CC/B} \\
+	&&& {\CC/A}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{f^*}"', shift right=2, from=1-4, to=2-4]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "{\Pi_f}"', shift right=2, from=2-4, to=1-4]
+	\arrow["{\Si_f}"', shift right=2, from=2-4, to=3-4]
+	\arrow["{f^*}"', shift right=2, from=3-4, to=2-4]
+	\arrow["{\times f}"{description}, bend left = {- 60}, from=1-4, to=3-4]
+	\arrow["{-^f}"{description}, bend left = {- 60}, from=3-4, to=1-4]
+	\arrow["f", from=2-1, to=2-2]
+	\arrow["\dashv"{anchor=center}, draw=none, from=0, to=1]
+\end{tikzcd}\]
+
+\begin{dfn}[Display]
+  \link{dfn_display_map}
+  Let $\SS$ be a set of morphisms in category $\CC$.
+  We say $\SS$ is a \textit{set of display maps} when for any compatible
+  pair of morphisms $f : A \to B$ in $\CC$ and $g : C \to B$ in $\SS$
+  the pullback exists and $f^{*}g \in \SS$.
+
+  We say $\SS$ is a \textit{display structure} when we have an operation that
+  takes a pair of morphisms $f : A \to B$ in $\CC$ and $g : C \to B$ in $\SS$
+  and returns a pullback such that $f^{*}g \in \SS$.
+\end{dfn}
+
+% \begin{dfn}
+%   Let $\SS$ be a set of morphisms in a category $\CC$.
+%   We say the pair $\SS$ is kind-of-representable (KoR) when
+%   % Uemura \cite{uemura2019general} defines the pair $(\CC,\SS)$ to form a
+%   % representable map category when $\CC$ is finitely complete and
+%   \begin{itemize}
+%     \item $\SS$ forms a subcategory of $\CC$
+%     \item $\SS$ is a display structure
+%     \item
+%   \end{itemize}
+% \end{dfn}
+
+The following definition is similar in spirit to both the definition of
+\textit{universes in a topos} from \cite{streicher} and also
+\textit{representable map categories} from Uemura \cite{uemura2019general}.
+
+\begin{dfn}[Universe of representable maps]
+  \link{dfn_urm}
+  Let $\CC$ be a category, and $\SS$ a set of morphisms in $\CC$.
+  We may denote morphisms in $\SS$ by $S : \Ga,S \to \Ga$ or $\si : \De \to \Ga$,
+  though this is just notation.
+  We say $\SS$ is an universe of representable maps (URM) when
+  \begin{enumerate}
+    \item $\SS$ is stable under $\CC$-pullbacks (strictly),
+          i.e. if $\de : \De \to \Ga$ is in $\CC$ and $S : \Ga,S \to \Ga$ is in $\SS$
+          and we have a pair of morphisms $S^{*} \de : \De,\de S \to \Ga,S$ in $\CC$ and
+          $\de^* S : \De,\de S \to \De$ in $\SS$ such that
+          \[\begin{tikzcd}
+            {\De,\de^* S} & {\Ga,S} \\
+            \De & \Ga
+            \arrow["S", from=1-2, to=2-2]
+            \arrow["{\de^* S}"', from=1-1, to=2-1]
+            \arrow["\de"', from=2-1, to=2-2]
+            \arrow["S^{*} \de", from=1-1, to=1-2]
+            \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+          \end{tikzcd}\]
+          Furthermore, this preserves identities and compositions from $\CC$ strictly, so that
+          \[ \id{\Ga}^{*} S = S \text{ and } S^{*} \id{\Ga} = \id{\Ga,S}\]
+          and
+          \[ \ep^{*} (\de^{*} S) = (\de \circ \ep)^{*} S \text{ and } (S^{*}\de)^{*}\ep = S^{*}(\de \circ \ep) \]
+          from which it follows that
+          $S^{*} : \CC / \Ga \to \CC / \Ga,S$ is a functor.
+    \item $\SS$ is closed under identities, i.e. if $\si : \De \to \Ga$ is in $\SS$ then
+          so are $\id{\De}$ and $\id{\Ga}$.
+    \item $\SS$ is closed under composition (aka $\Si$s), i.e. if
+          \[\begin{tikzcd}
+              {\Ga,S,T} & {\Ga,S} & \Ga
+              \arrow["T", from=1-1, to=1-2]
+              \arrow["\in \SS"', from=1-1, to=1-2]
+              \arrow["S", from=1-2, to=1-3]
+              \arrow["\in \SS"', from=1-2, to=1-3]
+            \end{tikzcd}
+          \quad \quad \text{ then } \quad \quad \Si_{S} T := S \circ T \in \SS\]
+    \item $\SS$ is closed under $\Pi$s, i.e. if $S : \Ga,S \to \Ga$ is in $\SS$
+          then the pullback functor $S^{*} : \CC / \Ga \to \CC / \Ga,S$ has a right
+          adjoint $\Pi_{S} : \CC / \Ga,S \to \CC / \Ga$, and
+            \[\begin{tikzcd}
+              {\Ga,S,T} & {\Ga,S} & \Ga
+              \arrow["T", from=1-1, to=1-2]
+              \arrow["\in \SS"', from=1-1, to=1-2]
+              \arrow["S", from=1-2, to=1-3]
+              \arrow["\in \SS"', from=1-2, to=1-3]
+            \end{tikzcd}
+          \quad \quad \text{ then } \quad \quad \Pi_{S} T \in \SS\]
+  \end{enumerate}
+
+  Note that the first four conditions combined result in $\SS$ forming a subcategory of $\CC$ that is an LCCC.
+  We can think of a URM as the smallest LCCC stable under $\CC$-pullbacks, generated by some maps.
+  The main difference of this definition with that of a representable map category is
+  dropping the condition that $\CC$ is finitely complete.
+  We address the differences with the definition of a universe in a topos \linkto{dfn_universe}{later}.
+  Note that in particular any URM is a display structure.
+\end{dfn}

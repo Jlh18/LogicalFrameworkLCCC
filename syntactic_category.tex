@@ -1,0 +1,680 @@
+\section{The category of contexts}
+
+I order to find categorical semantics for a type theory
+it is useful to study the category of contexts.
+In this section we construct the category of contexts.
+We will call this category $\CC$ for the rest of this section.
+
+We begin by recalling $\STLC$,
+simply typed $\la$-calculus with only unit, product and function classes.
+And use intuition of its categorical semantics to motivate those for logical frameworks.
+Recall that $\STLC$ can be interpreted in a \linkto{dfn_CCC}{CCC} $\DD$ by
+taking classes $K$ as $\DD$-objects $\bbrkt{K}$,
+contexts $\CtxExt{X_{1}:K_{1},\dots}{X_{n}}{K_{n}}$
+as products $\bbrkt{K_{1}} \tdt \bbrkt{K_{n}}$,
+and objects $\ObjJdg{\Ga}{K}{O}$ as morphisms $\bbrkt{O} : \bbrkt{\Ga} \to \bbrkt{K}$.
+This seems quite natural, since product classes become products,
+and function classes become internal homs in the semantics.
+If we are to immitate this for $\LF{\Si}$,
+we would only be able to talk about \textit{closed classes} $\ClsJdg{\bullet}{K}$,
+since in $\STLC$ we don't have dependent classes $\ClsJdg{\Ga}{K}$.
+However, in the presence of dependent pairs (aka $\Si$-types) we
+could view a context $\Ga = \CtxExt{X_{1}:K_{1},\dots}{X_{n}}{K_{n}}$
+as a closed class $\Si_{\Ga} := \Si_{X_{1}:K_{1}} \cdots \Si_{X_{n-1}:K_{n-1}} K_{n}$.
+Then any dependent class can be viewed as a context, which can be viewed as a closed class.
+
+\subsection{Contexts and dependent classes}
+
+Instead of including dependent pairs,
+let us view dependent classes $\ClsJdg{\Ga}{K}$ as extended contexts
+$\CtxExt{\Ga}{X}{K}$, and take \textit{contexts}
+(\linkto{up_to_jdg_eq}{up to judgmental equality}) as $\CC$-objects,
+and \textit{as a consequence} dependent classes as $\CC$-objects.
+
+\begin{multicols}{2}
+  \color{syntax}{
+  \[\CtxJdg{\Ga}\]}
+
+  \color{semantics}{
+  \[\bbrkt{\Ga} \in \CC\]
+  }
+\end{multicols}
+
+It is then natural to define morphisms of contexts (aka a substitution)
+(\linkto{up_to_jdg_eq}{up to judgmental equality}),
+denoted $\ObjJdg{\Ga}{\si}{\De}$,
+consisting of the data of objects
+
+\begin{align*}
+  &\ObjJdg{\Ga}{\si_{1}}{K_{1}}\\
+  &\ObjJdg{\Ga}{\si_{2}}{\Subst{\si_{1}}{X_{1}}{K_{2}}}\\
+  &\vdots & \text{ when } \De = \CtxExt{X_{1}:K_{1}}{\cdots, X_{n}}{K_{n}}\\
+  &\ObjJdg{\Ga}{\si_{n}}{\Subst{\si_{n-1}}{X_{n-1}}{\cdots \Subst{\si_{1}}{X_{1}}{K_{n}}}}
+\end{align*}
+
+Such a substitution corresponds to a closed object of the closed class
+$\Si_{\Ga} \to \Si_{\De}$ in the presence of dependent pairs.
+
+\begin{multicols}{2}
+  \color{syntax}{
+  \[\ObjJdg{\Ga}{\si}{\De}\]}
+
+  \color{semantics}{
+  \[\bbrkt{\si} : \bbrkt{\Ga} \to \bbrkt{\De}\]
+  }
+\end{multicols}
+
+The empty context gives an object $\bbrkt{\bullet}$,
+and for any context $\Ga$ there is exactly one substitution $\ObjJdg{\Ga}{\si}{\bullet}$,
+given by the data of no objects.
+This makes $\bbrkt{\bullet}$ the terminal object.
+
+\begin{multicols}{2}
+  \color{syntax}{
+  \[\infer[\textsc{ctx-emp}]{\CtxJdg{\bullet}}{}\]}
+
+  \color{semantics}{
+  \[\TERM_{\CC} \in \CC\]
+  }
+\end{multicols}
+
+For context extension, given $\ClsJdg{\Ga}{K}$,
+we obtain a substitution $\ObjJdg{\CtxExt{\Ga}{X}{K}}{\si}{\Ga}$
+by $\ObjJdg{\CtxExt{\Ga}{X}{K}}{X_{i}}{K_{i}}$ for each $X_{i} : K_{i} \in \Ga$.
+Then let's take the interpretation of $K$ to be a $\CC/\bbrkt{\Ga}$-object,
+where $\CC/\bbrkt{\Ga}$ is the slice category.
+
+\[ \bbrkt{\ClsJdg{\Ga}{K}} := \bbrkt{\CtxExt{\Ga}{X}{K}} \text{ and } \bbrkt{\ObjJdg{\CtxExt{\Ga}{X}{K}}{\si}{\Ga}}\]
+
+We can informally identify use the slice-object $\bbrkt{\ClsJdg{\Ga}{K}}$ to denote the underlying morphism.
+
+\begin{multicols}{2}
+  \color{syntax}{
+  \[\infer[\textsc{ctx-ext}]{\CtxJdg{\CtxExt{\Ga}{X}{K}}}{\ClsJdg{\Ga}{K}}\]}
+
+
+  \color{semantics}{
+    \begin{cd}
+     & \\
+  	{\bbrkt{\CtxExt{\Ga}{X}{K}}} && {\bbrkt{\Ga}}
+	\arrow["{\bbrkt{\ClsJdg{\Ga}{K}}}", from=2-1, to=2-3]
+  \end{cd}
+  }
+\end{multicols}
+
+\subsection{Judgmental Equality}
+\link{up_to_jdg_eq}
+Technically we should we taking $\CC$-objects to be the
+set of contexts quotiented by the equivalence relation induced by judgmental equality on classes,
+i.e. $\CtxExt{{X_{1} : K_{1}},\cdots}{X_{n}}{K_{n}} \sim \CtxExt{{Y_{1} : K'_{1}},\cdots}{Y_{n}}{K'_{n}}$
+if and only if
+\begin{align*}
+  \IdClsJdg{\bullet}{K_{1}}{K'_{1}}\\
+  \IdClsJdg{X_{1} : K_{1}}{K_{2}}{K'_{2}}\\
+  \vdots \quad \quad \quad \quad \quad \quad  \\
+  \IdClsJdg{\CtxExt{{X_{1} : K_{1}},\cdots}{X_{n-1}}{K_{n-1}}}{K_{n}}{K'_{n}}
+\end{align*}
+We always denote an equivalence class using a representative $\bbrkt{\Ga}$,
+and omit the quotient-related proofs.
+
+We should also be taking $\CC$-morphisms from $\bbrkt{\Ga}$ to $\bbrkt{\De}$
+to be substitutions quotiented by the equivalence relation induced by judgmental equality on terms,
+i.e. $\ObjJdg{\Ga}{\si}{\De} \sim \ObjJdg{E}{\rho}{Z}$ if and only if $\bbrkt{\Ga} = \bbrkt{E}$ and
+$\bbrkt{\De} = \bbrkt{Z}$ and
+\begin{align*}
+  &\IdObjJdg{\Ga}{\si_{1}}{\rho_{1}}{K_{1}}\\
+  &\IdObjJdg{\Ga}{\si_{2}}{\rho_{2}}{\Subst{\si_{1}}{X_{1}}{K_{2}}}\\
+  &\vdots & \text{ when } \De = \CtxExt{X_{1}:K_{1}}{\cdots, X_{n}}{K_{n}}\\
+  &\IdObjJdg{\Ga}{\si_{n}}{\rho_{n}}{\Subst{\si_{n-1}}{X_{n-1}}{\cdots \Subst{\si_{1}}{X_{1}}{K_{n}}}}
+\end{align*}
+Likewise, we always denote an equivalence class using a representative $\bbrkt{\si}$,
+and omit the quotient-related proofs.
+
+\subsection{Objects}
+
+In the $\STLC$ case we interpreted objects
+$\ObjJdg{\Ga}{O}{K}$ as morphisms $\bbrkt{O} : \bbrkt{\Ga} \to \bbrkt{K}$.
+Since the classes are now dependent,
+and the object is situated in some context,
+we should upgrade this to a morphism in the slice $\CC / \bbrkt{\Ga}$.
+
+\begin{multicols}{2}
+
+    \[\color{syntax}\ObjJdg{\Ga}{O}{K}\]
+
+
+  \color{semantics}{
+  \begin{cd}
+     {\bbrkt{\Ga}} && {\bbrkt{\Ga,X:K}} \\
+    & {\bbrkt{\Ga}}
+    \arrow["{\bbrkt{\ObjJdg{\Ga}{O}{K}}}", from=1-1, to=1-3]
+    \arrow["{\id{\bbrkt{\Ga}}}"', from=1-1, to=2-2]
+    \arrow["{\bbrkt{\ClsJdg{\Ga}{K}}}", from=1-3, to=2-2]
+  \end{cd}
+  }
+\end{multicols}
+
+We can call $\bbrkt{\ObjJdg{\Ga}{O}{K}}$
+a \textit{section} of the \textit{bundle} $\bbrkt{\ClsJdg{\Ga}{K}}$.
+This is a bundle in the sense that for any collection of objects $O_{1},\cdots,O_{n}$ in the classes from $\Ga$,
+there is a closed class \[\ClsJdg{\bullet}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{K}}\]
+which is the \textit{fiber} over that collection of objects.
+A section of the bundle then picks out for any such collection of objects,
+an object in the \textit{fiber}
+\[\ObjJdg{\bullet}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{O}}{[O_{n}/X_{n}] \cdots \Subst{O_{1}}{X_{1}}{K}}\]
+\begin{multicols}{2}
+
+    \[\color{syntax}  \infer[\textsc{var-obj}]{\ObjJdg{\Ga}{X}{K}}
+    {\CtxJdg{\Ga} & X:K \in \Ga}\]
+
+
+  \color{semantics}{
+  \begin{cd}
+     {\bbrkt{\Ga}} && {\bbrkt{\Ga,Y:K}} \\
+    & {\bbrkt{\Ga}}
+    \arrow["{\bbrkt{\ObjJdg{\Ga}{X}{K}}}", from=1-1, to=1-3]
+    \arrow["{\id{\bbrkt{\Ga}}}"', from=1-1, to=2-2]
+    \arrow["{\bbrkt{\ClsJdg{\Ga}{K}}}", from=1-3, to=2-2]
+  \end{cd}
+  }
+\end{multicols}
+
+We may also write $\bbrkt{K}$ to mean $\bbrkt{\ClsJdg{\Ga}{K}}$ for brevity.
+
+\subsection{Substitution action on classes and objects}
+
+Context morphisms (aka substitutions) are dependent tuples of objects,
+just as contexts are dependent tuples of classes.
+They can be {\color{semantics} composed}, which we can view as {\color{syntax} sequential substitution}.
+They have an {\color{syntax} action on dependent classes},
+which we will show corresponds to {\color{semantics} pullback of bundles}.
+They have an {\color{syntax} action on objects} (more generally {\color{syntax} action on other substitutions}),
+which we will show corresponds to {\color{semantics} pullback of sections}
+(more generally {\color{semantics} existence of all pullbacks}).
+
+First let us suppose $\ObjJdg{\Ga}{\si}{\De}$ is a substitution and $\ClsJdg{\De}{K}$.
+Then we can form $\ClsJdg{\Ga}{\si K}$,
+where
+\[ \si K := \Subst{\si_{n}}{X_{n}}{ \cdots \Subst{\si_{1}}{X_{1}}{K}} \quad \text{ and }
+  \quad \De = \CtxExt{X_{1}:K_{1}}{\cdots, X_{n}}{K_{n}}\]
+
+This automatically gives us a substitution $\ObjJdg{\CtxExt{\Ga}{X}{\si K}}{\si :: X}{{\CtxExt{\De}{X}{K}}}$.
+This says we have a pullback
+
+\begin{multicols}{2}
+
+\[\color{syntax} \infer{\ClsJdg{\Ga}{\si K}}{\ObjJdg{\Ga}{\si}{\De} & & \ClsJdg{\De}{K} } \]
+
+%% this admissible judgment needs a name
+
+{\color{semantics}
+\begin{cd}
+  {\bbrkt{\CtxExt{\Ga}{X}{\si K}}} && {\bbrkt{\CtxExt{\De}{X}{K}}} \\
+  \\
+  {\bbrkt{\Ga}} && {\bbrkt{\De}}
+  \arrow["{\bbrkt{\si}}"', from=3-1, to=3-3]
+  \arrow["{\bbrkt{K}}", from=1-3, to=3-3]
+  \arrow["{\bbrkt{\si :: X}}", dashed, from=1-1, to=1-3]
+  \arrow["{\bbrkt{\si K}}"', dashed, from=1-1, to=3-1]
+  \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=3-3]
+\end{cd}}
+
+\end{multicols}
+
+To check the diagram commutes, we need to check judgmental equality component-wise
+(opening up the equivalence class definition).
+For the universal property we need to apply (syntactic) substitution on objects.
+
+Now suppose $\ObjJdg{\De}{O}{K}$.
+Then we can form $\ObjJdg{\Ga}{\si O}{\si K}$,
+where
+\[ \si O := \Subst{\si_{n}}{X_{n}}{ \cdots \Subst{\si_{1}}{X_{1}}{O}}\]
+
+This says our pullback diagram extends
+
+\begin{multicols}{2}
+
+\[\color{syntax} \infer{\ObjJdg{\Ga}{\si O}{\si K}}{\ObjJdg{\Ga}{\si}{\De} & & \ObjJdg{\De}{O}{K} } \]
+
+%% this admissible judgment needs a name
+
+{\color{semantics}
+\begin{cd}
+  	{\bbrkt{\Ga}} && {\bbrkt{\De}} \\
+	\\
+	{\bbrkt{\CtxExt{\Ga}{X}{\si K}}} && {\bbrkt{\CtxExt{\De}{X}{K}}} \\
+	\\
+	{\bbrkt{\Ga}} && {\bbrkt{\De}}
+	\arrow["{\bbrkt{\si}}"', from=5-1, to=5-3]
+	\arrow["{\bbrkt{K}}", from=3-3, to=5-3]
+	\arrow["{\bbrkt{\si :: X}}", from=3-1, to=3-3]
+	\arrow["{\bbrkt{\si K}}"', from=3-1, to=5-1]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=3-1, to=5-3]
+	\arrow["{\bbrkt{\si O}}"', dashed, from=1-1, to=3-1]
+	\arrow["{\bbrkt{O}}", from=1-3, to=3-3]
+	\arrow["{\bbrkt{\si}}", from=1-1, to=1-3]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=3-3]
+\end{cd}}
+\end{multicols}
+
+Now we can use substitution on classes and objects to define composition of context morphisms.
+Given two substitutions $\ObjJdg{\Ga_{0}}{\si}{\Ga_{1}}$ and $\ObjJdg{\Ga_{1}}{\rho}{\Ga_{2}}$
+we define the composition $\ObjJdg{\Ga_{0}}{\si \gg \rho}{\Ga_{2}}$
+by giving
+
+\begin{align*}
+  &\ObjJdg{\Ga_{0}}{\si{\rho_{1}}}{\si K_{1}}\\
+  &\ObjJdg{\Ga_{0}}{\si\rho_{2}}{\si \Subst{\rho_{1}}{X_{1}}{K_{2}}} \\
+  &\vdots & \text{ where } & \Ga_{2} = \CtxExt{X_{1}:K_{1}}{\cdots, X_{n}}{K_{n}}\\
+  &\ObjJdg{\Ga_{0}}{\si \rho_{n}}{\si \Subst{\rho_{n-1}}{X_{n-1}}{\cdots \Subst{\rho_{1}}{X_{1}}{K_{n}}}}
+\end{align*}
+
+So we have
+
+\begin{multicols}{2}
+  \[\color{syntax} \ObjJdg{\Ga_{0}}{\si \gg \rho}{\Ga_{2}}\]
+
+   \[ \color{semantics}
+    \bbrkt{\rho} \circ \bbrkt{\si} : \bbrkt{\Ga_0} \to \bbrkt{\Ga_2} \]
+\end{multicols}
+
+There is a techincal issue here about substitution not working out in a general LCCC,
+because of pullback only being unique up to isomorphism.
+However, in the syntax category we have ``strict pullbacks''.
+
+
+\subsection{Strict pullbacks}
+\link{strict_pullbacks}
+
+The previous construction of the pullback $\bbrkt{K} \mapsto \bbrkt{\si} \mapsto (\bbrkt{\si K},\bbrkt{\si :: X})$
+defines a strictly equal diagram.
+\[ \bbrkt{\si}^{*} \bbrkt{\rho}^{*} \bbrkt{K} = \bbrkt{\si (\rho K)} =
+   \bbrkt{(\si \gg \rho) K} = \brkt{\bbrkt{\rho} \circ \bbrkt{\si}}^{*} \bbrkt{K}\]
+
+% https://q.uiver.app/?q=WzAsOSxbMiwxLCJcXEdhXzEsXFxyaG8gSyJdLFsyLDIsIlxcR2FfMSJdLFszLDEsIlxcR2FfMixLIl0sWzMsMiwiXFxHYV8yIl0sWzEsMSwiXFxHYV8wLFxcc2kgXFxyaG8gSyJdLFsxLDIsIlxcR2FfMCJdLFswLDBdLFswLDIsIlxcR2FfMCJdLFswLDEsIlxcR2FfMCwoXFxzaSBcXGdnIFxccmhvKSBLIl0sWzAsMSwiXFxyaG8gSyJdLFswLDJdLFsyLDMsIksiXSxbMSwzLCJcXHJobyIsMl0sWzAsMywiIiwxLHsic3R5bGUiOnsibmFtZSI6ImNvcm5lciJ9fV0sWzQsMF0sWzQsNSwiXFxzaSBcXHJobyBLIiwyXSxbNCwxLCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XSxbNSwxLCJcXHNpIiwyXSxbNyw1LCI9IiwxXSxbOCw3LCIoXFxzaSBcXGdnIFxccmhvKSBLID0iXSxbOCw0LCI9IiwxXSxbOCw1LCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XV0=
+\[\begin{tikzcd}
+	{} \\
+	{\Ga_0,(\si \gg \rho) K} & {\Ga_0,\si \rho K} & {\Ga_1,\rho K} & {\Ga_2,K} \\
+	{\Ga_0} & {\Ga_0} & {\Ga_1} & {\Ga_2}
+	\arrow["{\rho K}", from=2-3, to=3-3]
+	\arrow[from=2-3, to=2-4]
+	\arrow["K", from=2-4, to=3-4]
+	\arrow["\rho"', from=3-3, to=3-4]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=2-3, to=3-4]
+	\arrow[from=2-2, to=2-3]
+	\arrow["{\si \rho K}" {name=0}, from=2-2, to=3-2]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=2-2, to=3-3]
+	\arrow["\si"', from=3-2, to=3-3]
+	\arrow["{=}"{description}, from=3-1, to=3-2]
+	\arrow["{(\si \gg \rho) K}"' {name=1}, from=2-1, to=3-1]
+	\arrow["{=}"{description}, from=2-1, to=2-2]
+  \arrow["{=}"{description}, draw=none, from=1, to=0]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=2-1, to=3-2]
+\end{tikzcd}\]
+
+
+Note that in general categories (including LCCCs) the pullback along a composition is only
+necessarily isomorphic to double pullback.
+
+\subsection{Dependent function classes}
+
+In the $\STLC$ case, $\la$-abstraction and function application
+provide the adjunction isomorphism in the semantics
+
+\begin{cd}
+  	{\CC(\bbrkt{\Ga  \times  K_0}, \bbrkt{K_1})} && {\CC(\bbrkt{\Ga},\bbrkt{K_0 \to K_1})}
+	\arrow["\lambda", shift left, from=1-1, to=1-3]
+	\arrow["{\mathsf{ap}}", shift left, from=1-3, to=1-1]
+\end{cd}
+
+Let us try to consider what happens when function classes
+are replaced with dependent function classes.
+Instead of morphisms in the ambient category,
+we need morphisms in slices,
+since we are concerned with objects $\ObjJdg{\Ga}{O}{\PiCS{X}{S}{K}}$.
+
+\begin{cd}
+  	{\CC/? \, (\, {?}\, , \bbrkt{K})} && {\CC/\bbrkt{\Ga}(\id{\bbrkt{\Ga}},\bbrkt{{\PiCS{X}{S}{K}}})}
+	\arrow["\textsc{pi-lam-obj}", shift left, from=1-1, to=1-3]
+	\arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
+\end{cd}
+
+The introduction rule \textsc{pi-lam-obj} fill in the missing details.
+We only use a special case of \textsc{pi-app-obj} here.
+
+  {\color{syntax}
+    \begin{mathpar}
+      \infer[\textsc{pi-lam-obj}]{\ObjJdg{\Ga}{\LamCS{X}{S}{O}}{\PiCS{X}{S}{K}}}
+        {{\color{lightgrey}\ObjJdg{\Ga}{S}{\SortCS}} & \ObjJdg{\CtxExt{\Ga}{X}{S}}{O}{K}}
+
+      \infer[\textsc{pi-app-obj}]{\ObjJdg{\CtxExt{\Ga}{X}{S}}{\ApCS{O}{X}}{K}}
+        {\ObjJdg{\CtxExt{\Ga}{X}{S}}{O}{\PiCS{X}{S}{K}} & {\color{lightgrey}\ObjJdg{\CtxExt{\Ga}{X}{S}}{X}{S}}}
+    \end{mathpar}}
+
+
+{\color{semantics}
+\begin{cd}
+  {\CC/\bbrkt{\CtxExt{\Ga}{X}{S}} \, (\id{\CtxExt{\Ga}{X}{S}} , \bbrkt{K})} && {\CC/\bbrkt{\Ga}(\id{\bbrkt{\Ga}},\bbrkt{{\PiCS{X}{S}{K}}})}
+  \arrow["\textsc{pi-lam-obj}", shift left, from=1-1, to=1-3]
+  \arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
+\end{cd}
+}
+
+The $\be$ and $\eta$ rules for \textsc{pi} state that the maps back and forth form a bijection.
+It is not yet clear what adjunction the above is a special case of.
+
+Following the moves from before and our categorical intuition,
+we first replace $\id{\bbrkt{\Ga}}$ with a more general $\CC/\bbrkt{\Ga}$-object,
+a context morphism $\bbrkt{\ObjJdg{E}{\ep}{\Ga}}$.
+The object is then replaced with a morphism in the slice
+$\bbrkt{\ep :: f} \in \CC/\bbrkt{\Ga}(\bbrkt{\ep},\bbrkt{{\PiCS{X}{S}{K}}})$.
+\begin{cd}
+  	{\bbrkt{E}} && {\bbrkt{\Ga,\PiCS{X}{S}{K}}} \\
+	& {\bbrkt{\Ga}}
+	\arrow["{\bbrkt{\PiCS{X}{S}{K}}}", from=1-3, to=2-2]
+	\arrow["{\bbrkt{\ep}}"', from=1-1, to=2-2]
+	\arrow["{\bbrkt{\ep::f}}", from=1-1, to=1-3]
+\end{cd}
+This in particular gives some object
+\[ \ObjJdg{E}{f}{\PiCS{X}{\ep S}{\brkt{(\ep :: X )K}}} \]
+Weakening and applying \textsc{pi-app-obj} we obtain
+\[ \ObjJdg{\CtxExt{E}{X}{\ep S}}{f X}{{(\ep ::X)K}} \]
+
+\begin{cd}
+  {\bbrkt{E,X: \ep S,Y:( \ep :: X )K}} && {\bbrkt{E,X: \ep S}} && {\bbrkt{E}} \\
+  {\bbrkt{\Ga,X:S,Y:K}} && {\bbrkt{\Ga,X:S}} && {\bbrkt{\Ga}}
+  \arrow["{\bbrkt{ \ep :: X ::Y}}"', from=1-1, to=2-1]
+  \arrow["{\bbrkt{( \ep :: X )K}}", from=1-1, to=1-3]
+  \arrow["{\bbrkt{K}}"', from=2-1, to=2-3]
+  \arrow["{\bbrkt{ \ep S}}", from=1-3, to=1-5]
+  \arrow["{\bbrkt{S}}"', from=2-3, to=2-5]
+  \arrow["{\bbrkt{ \ep :: X }}"{description}, from=1-3, to=2-3]
+  \arrow["{\bbrkt{\ep}}", from=1-5, to=2-5]
+  \arrow["\lrcorner"{anchor=center, pos=0.125, rotate=0}, draw=none, from=1-3, to=2-5]
+  \arrow["\lrcorner"{anchor=center, pos=0.125, rotate=0}, draw=none, from=1-1, to=2-3]
+  \arrow["{\bbrkt{f X}}"', bend right, from=1-3, to=1-1]
+  \arrow[dashed, from=1-3, to=2-1]
+\end{cd}
+
+The dashed arrow is then a morphism in the slice $\CC / \bbrkt{\Ga,X:S}$.
+So we have (making the same argument the other way round and using $\be$ and $\eta$)
+\[ \color{semantics}
+  \begin{tikzcd}
+  {\CC/\bbrkt{\CtxExt{\Ga}{X}{S}} \, (\bbrkt{ \ep :: X } , \bbrkt{K})} && {\CC/\bbrkt{\Ga}(\bbrkt{\ep},\bbrkt{{\PiCS{X}{S}{K}}})}
+  \arrow["\textsc{pi-lam-obj}", shift left, from=1-1, to=1-3]
+  \arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
+\end{tikzcd} \]
+
+This is closer to an adjunction: we can see that the left adjoint should be pullback along
+$\bbrkt{S} : \bbrkt{\CtxExt{\Ga}{X}{S}} \to \bbrkt{\Ga}$.
+\[ \bbrkt{ S }^* \bbrkt{\ep} = \bbrkt{ \ep :: X }\]
+Now we make the right adjoint functorial as well.
+We replace $\bbrkt{K}$ with a slice $\bbrkt{\de} : \bbrkt{\De} \to \bbrkt{\CtxExt{\Ga}{X}{S}}$.
+% Could ask for this bijection to work for arbitrary pullback?
+% The answer is \textit{not quite}.
+% We can replace the context extension $\bbrkt{\CtxExt{\Ga}{X}{S} \to \bbrkt{\Ga}}$ with a context morphism
+% $\bbrkt{\ObjJdg{\De}{\de}{\Ga}}$,
+% but we will only be able to find a right adjoint for pullback along $\bbrkt{\de}$ when
+% $\De$ \textit{only contains sorts}.
+% This is because \textsc{pi-cls} restricts formation of function classes to classes dependent over sorts.
+
+% \begin{mathpar}
+%   \infer[\textsc{ctx-sort-emp}]{\CtxSortJdg{\bullet}}{}
+
+%   \infer[\textsc{ctx-sort-ext}]{\CtxSortJdg{\CtxExt{\Ga}{X}{S}}}{\CtxSortJdg{\Ga} & \ObjJdg{\Ga}{S}{\SortCS}}
+% \end{mathpar}
+
+\[ \color{semantics}
+\begin{tikzcd}
+  {\CC/\bbrkt{\CtxExt{\Ga}{X}{S}} \, (\bbrkt{ S }^* \bbrkt{\ep} , \bbrkt{\de})} && {\CC/\bbrkt{\Ga}(\bbrkt{\ep},{\Pi_{\bbrkt{S}}\bbrkt{\de}})}
+  \arrow["\textsc{pi-lam-obj}", shift left, from=1-1, to=1-3]
+  \arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
+\end{tikzcd}\]
+Briefly and roughly: Write context $\De = V_{1} : \De_{1}, \cdots, V_{n} : \De_{n}$.
+A slice morphism $O$ on the left consists of objects $\ObjJdg{\CtxExt{E}{X}{\ep S}}{O_{i}}{\Subst{O}{V}{\De_{i}}}$.
+Then $\la$-abstraction gives objects $\ObjJdg{E}{\LamCS{X}{\ep S}{O_{i}}}{\PiCS{X}{\ep S}{\Subst{O}{V}{\De_{i}}}}$
+on the right hand side.
+So we should define ${\Pi_{\bbrkt{\de}}\bbrkt{\ze}}$ such that its $\CC$-object part is context
+\[
+  \bbrkt{V_{1} : \PiCS{X}{\ep S}{{\De_{0}}}, \cdots, V_{n} : {\PiCS{X}{\ep S}{{\De_{n}}}}}
+\]
+and its morphism part comes from each $Z_{i}$ being a class in context $\CtxExt{\Ga}{X}{S}$.
+The proof that it is an adjunction is in the same vein as before.
+
+\[
+  \color{semantics}
+  \bbrkt{S}^{*} \dashv \Pi_{\bbrkt{S}}\]
+
+\subsection{Sorts (pre-equality)}
+The category of contexts is \textit{not} a locally cartesian closed category.
+In particular, we don't have pullbacks for arbitrary morphisms in the category.
+However, (even for the fragment of the LF without the equality class)
+we can find a subcategory that \textit{is} locally cartesian closed,
+which essentially consists of context extentions, where the extensions only introduce sorts.
+Furthermore, this subcategory $\SS_{\Pi}$ will be a \linkto{dfn_urm}{universe of representable maps}.
+
+We know that for contexts extended with sorts $\bbrkt{S} : \bbrkt{\CtxExt{\Ga}{X}{S}} \to \bbrkt{\Ga}$
+we have the adjunction $\bbrkt{S}^{*} \dashv \Pi_{\bbrkt{S}}$.
+In particular $\bbrkt{\ElCS} : \bbrkt{\CtxExt{\ElCS : \SortCS}{X}{\ElCS}} \to \bbrkt{\ElCS : \SortCS}$
+is such an extension, and there is a correspondence between pullbacks of $\bbrkt{\ElCS}$
+and sort-judgments
+
+\begin{multicols}{2}
+  \[\color{syntax} \ObjJdg{\Ga}{S}{\SortCS}\]
+
+  \[ \color{semantics}
+    \begin{tikzcd}
+      {\bbrkt{\Ga,S}} & {\bbrkt{\ElCS : \SortCS,X : \ElCS}} \\
+      {\bbrkt{\Ga}} & {\bbrkt{\ElCS : \SortCS}}
+      \arrow[from=1-1, to=1-2]
+      \arrow["{\bbrkt{\ElCS}}", from=1-2, to=2-2]
+      \arrow[from=2-1, to=2-2]
+      \arrow["\bbrkt{S}"', from=1-1, to=2-1]
+      \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+    \end{tikzcd}
+    \]
+\end{multicols}
+
+Let us try to generate from $\bbrkt{\ElCS}$,
+the smallest LCCC containing it (supposing it exists\footnote{
+  This is reasonable given that we already have pullbacks and products
+  for this class of maps.
+}).
+So we throw $\ElCS$ into $\SS_{\Pi}$,
+throw in identities,
+take the closure under composition,
+and closure under pullback against $\CC$-morphisms.
+After checking some examples,
+we guess that $\SS_{\Pi}$ should be characterized as the set of
+compositions of sort-context-exentions,
+i.e. $\bbrkt{S_{1}} \circ \cdots \circ \bbrkt{S_{n}}$
+(the identity on $\bbrkt{\Ga}$ when $n = 0$)
+whenever
+\[ \CtxJdg{\Ga} \quad \quad \ObjJdg{\Ga}{S_{1}}{\SortCS} \quad \quad \ObjJdg{\CtxExt{\Ga}{X_{1}}{S_{1}}}{S_{2}}{\SortCS} \quad \quad
+   \cdots \quad \quad \ObjJdg{\CtxExt{\CtxExt{\Ga}{X_{1}}{S_{1}}, \cdots }{X_{n-1}}{S_{n-1}}}{S_{n}}{\SortCS}\]
+To ensure these two characterizations of $\SS_{\Pi}$ are equivalent
+it suffices to check that the second is stable under pullbacks, and closed under $\Pi$s.
+
+To check stability under pullback along $\bbrkt{\si} : \bbrkt{\De} \to \bbrkt{\Ga}$,
+first recall that for any sort $\bbrkt{S} : \bbrkt{\CtxExt{\Ga}{X}{S}} \to \bbrkt{\Ga}$,
+the pullback is the substition on the sort $\bbrkt{\si^{*}S} : \bbrkt{\CtxExt{\De}{X}{\si^{*}S}} \to \bbrkt{\De}$
+which is another sort.
+This means that the pullback of any composition $\bbrkt{S_{1}} \circ \cdots \circ \bbrkt{S_{n}}$
+is just the composition of the pullbacks (``pasting''),
+and given that each piece of the pullback is a sort,
+the composition is in $\SS_{\Pi}$.
+For the case when $n = 0$ note that the pullback of the identity is the identity.
+
+Closure under $\Pi$s: by stability under pullback along general context substitutions,
+we know that for any morphism $g = \bbrkt{S_{1}} \circ \cdots \circ \bbrkt{S_{n}} \in \SS_{\Pi}$,
+$g^{*}$ is a well-defined functor.
+Furthermore, for each $\bbrkt{S_{i}}$ we have an adjunction $\bbrkt{S_{i}}^{*} \dashv \Pi_{\bbrkt{S_{i}}}$,
+and the composition of adjunctions % ref?
+yields an adjunction
+\[\bbrkt{S_{n}}^{*} \circ \cdots \circ \bbrkt{S_{1}}^{*}=
+  \bbrkt{g}^{*} \dashv \Pi_{\bbrkt{g}} = \Pi_{\bbrkt{S_{1}}} \circ \cdots \circ \Pi_{\bbrkt{S_{n}}}\]
+
+Thus the two charactizations of $\SS_{\Pi}$ are equivalent and
+$\SS_{\Pi}$ is a URM.
+
+\subsection{Equality classes}
+We showed that pullbacks of context morphisms along context extensions/classes
+corresponds to substitution on classes.
+Do we have pullback along any context morphism?
+The answer is \textit{not in this type theory}: in order to construct the pullback,
+we need an equality class, but our equality classes are restricted to $\SortCS$.
+Let us temporarily throw in an extra rule for the sake of exposition,
+and use it to construct a pullback
+
+\begin{multicols}{2}
+    \[
+  \color{syntax}{
+        \infer[\textsc{eq-cls}]{\ClsJdg{\Ga}{\EqCS{K}{O_0}{O_1}}}
+        {\ObjJdg{\Ga}{O_0}{K} & \ObjJdg{\Ga}{O_1}{K}}
+    }
+      \]
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXERlIFxcdGltZXNfe1xcR2F9IEUiXSxbMiwwLCJFIl0sWzAsMiwiXFxEZSJdLFsyLDIsIlxcR2EiXSxbMCwxXSxbMiwzLCJcXGRlIiwyXSxbMSwzLCJlIl0sWzAsMl1d
+{\color{semantics}\begin{cd}
+  {\bbrkt{\De} \times_{\bbrkt{\Ga}} \bbrkt{E}} && \bbrkt{E} \\
+  \\
+  \bbrkt{\De} && \bbrkt{\Ga}
+  \arrow["\pi_{E}", from=1-1, to=1-3]
+  \arrow["\bbrkt{\de}"', from=3-1, to=3-3]
+  \arrow["\bbrkt{\ep}", from=1-3, to=3-3]
+  \arrow["\pi_{\De}"', from=1-1, to=3-1]
+  \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=3-3]
+\end{cd}}
+\end{multicols}
+
+Again imagining $\De$ and $E$ as closed classes,
+the pullback should be ``pairs of objects in $\De \times E$'' that
+are equal upon their substitutions into the objects given by $\de$ and $\ep$.
+In set-theoretic notation (since we are inspired by pullback in $\SET$)
+\[ \set{ (X,Y) \in \De \times E \st \de(X) = \ep(Y) }\]
+Translating this idea into a context means that we need
+\begin{align*}
+  {\bbrkt{\De} \times_{\bbrkt{\Ga}} \bbrkt{E}} & = \bbrkt{X : \De, Y : E, H : \EqCS{\Ga}{\de}{\ep}}\\
+  \pi_{\De} & = \bbrkt{ X } \\
+  \pi_{E} & = \bbrkt{ Y }
+\end{align*}
+
+In detail: if $\De = X_{1} : \De_{1}, \cdots , X_{n} : \De_{n}$
+and $E = Y_{1} : E_{1}, \cdots, Y_{m} : E_{m}$
+and $\Ga = Z_{1} : \Ga_{1}, \cdots , Z_{l} : \Ga_{l}$
+then the context is
+\[X_{1} : \De_{1}, \cdots , X_{n} : \De_{n}, Y_{1} : E_{1}, \cdots, Y_{m} : E_{m} ,
+  H_{1} : \EqCS{\Ga_{1}}{\de_{1}}{\ep_{1}}, \cdots , H_{k} : \EqCS{\Ga_{l}}{\de_{l}}{\ep_{l}}\]
+and the context morphisms are those that return the relevant variables from this context.
+
+To show the universal property, given cone $\bbrkt{Z}$
+we use that judgmental equalities
+$\IdObjJdg{Z}{\ze \gg \de}{\ze \gg \ep}{\Ga}$
+lift
+to $\ObjJdg{Z}{\SelfCS}{\EqCS{\Ga}{\ze \gg \de}{\ze \gg \ep}}$ for existence
+(this fact follows from judgmental equality being a congruence);
+we use \textsc{unicity} for uniqueness.
+
+Hence we conclude that adding the rule \textsc{eq-cls}
+then would mean that the whole context category has pullbacks.
+
+% \begin{multicols}{2}
+%     \[
+%   \color{syntax}{
+%         \infer[\textsc{eq-cls}]{\ClsJdg{\Ga}{\EqCS{K}{O_0}{O_1}}}
+%         {\ObjJdg{\Ga}{O_0}{K} & \ObjJdg{\Ga}{O_1}{K}}
+%     }
+%       \]
+
+
+%   \color{semantics}{\[\bbrkt{\De} \times_{\bbrkt{\Ga}} \bbrkt{E}\]}
+% \end{multicols}
+
+\subsection{Sorts (post-equality)}
+We want the corresponding semantics for the rule \textsc{eq-sort}.
+This should give us some URM that is closed under equality-formation.
+The situation is similar to \textsc{eq-cls},
+except our assumption should be that we have
+\[\begin{tikzcd}
+  {\bbrkt{Y : E, X : \De, H : \EqCS{\Ga}{\de}{\ep}}} && \bbrkt{E} \\
+  \\
+  \bbrkt{\De} && \bbrkt{\Ga}
+  \arrow["\pi_{E}", from=1-1, to=1-3]
+  \arrow["\bbrkt{\de}"', from=3-1, to=3-3]
+  \arrow["\bbrkt{\ep}", from=1-3, to=3-3]
+  \arrow["\pi_{\De}"', from=1-1, to=3-1]
+  \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=3-3]
+\end{tikzcd}\]
+when $\Ga$ only contains sorts.
+This guarantees that each equality class formed $\EqCS{\Ga_{i}}{\de_{i}}{\ep_{i}}$
+is again a sort.
+
+Now, ensuring $\Ga$ is sort-only,
+we naively try to add $\bbrkt{\de} : \bbrkt{\De} \to \bbrkt{\Ga}$ into $\SS_{\Pi}$,
+and try to make this a URM.
+Firstly this means that $\pi_{E} = \bbrkt{\ep}^{*}\bbrkt{\de}$ should be in this set.
+Although we can form the pullback along $\pi_{E}$ against any $\CC$-morphism
+(it is a series of context extensions),
+we do not get an adjunction $\pi_{E}^{*} \dashv \Pi_{\pi_{E}}$.
+Having the adjunction requires an impredicative dependent function type,
+i.e. one that has general classes as hypotheses.
+
+However, if we require that \textit{both $\De$ and $\Ga$} are sort only,
+then $\pi_{E}$ is a context extension of $E$ extended with only sorts,
+so it is in $\SS_{\Pi}$ already.
+So let us characterize our new candidate URM as
+\[\SS_{\Pi,=} := \SS_{\Pi} \cup \set{ \bbrkt{\ObjJdg{\De}{\de}{\Ga}} \st \De,\Ga \text{ sort-only }}\]
+
+$\SS_{\Pi,=}$ is stable under pullback, as noted above.
+It is clearly closed under identity.
+To show it is closed under composition,
+we case on which part of the union the parts came from;
+each case is easy.
+To show it is closed under $\Pi$s, we just need to generalize the adjunction from before:
+
+\begin{cd}
+  {\CC/\bbrkt{\De} \, (\bbrkt{ \de }^* \bbrkt{\ep} , \bbrkt{\ze})} && {\CC/\bbrkt{\Ga}(\bbrkt{\ep},{\Pi_{\bbrkt{\de}}\bbrkt{\ze}})}
+  \arrow["\textsc{pi-lam-obj}", shift left, from=1-1, to=1-3]
+  \arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
+\end{cd}
+
+Briefly and roughly, if $\bbrkt{\ze} : \bbrkt{Z} \to \bbrkt{\De}$ for
+$Z = V_{1} : Z_{1}, \cdots, V_{n} : Z_{n}$
+then the $\CC$-object part of ${\Pi_{\bbrkt{\de}}\bbrkt{\ze}}$ is
+\[
+  \bbrkt{V_{1} : \PiCS{X}{\De}{\PiCS{Y}{\EqCS{\Ga}{\ep}{\de}}{Z_{1}},\cdots, V_{n} : \PiCS{X}{\De}{\PiCS{Y}{\EqCS{\Ga}{\ep}{\de}}{Z_{n}}}}}
+\]
+This can be formed since $\De$ is sort-only and $\Ga$ is sort only (hence the equality classes are sorts).
+Furthermore, if $\bbrkt{\ze} \in \SS_{\Pi,=}$ then either it is a sort-context-extension of sort-only $\De$,
+hence $Z$ is sort-only, or it $Z$ is sort-only by assumption.
+Thus $\Pi_{\de}\bbrkt{\ze}$ would be sort-only by \textsc{pi-sort}.
+So $\SS_{\Pi,=}$ is closed under $\Pi$s.
+This concludes that $\SS_{\Pi,=}$ is a URM.
+
+Note that $\SS_{\Pi}$ as previously described
+is still a URM when we have equality as part of the syntax.
+So now we have two URMs $\SS_{\Pi} \hookr \SS_{\Pi,=}$.
+
+\subsection{Signatures}
+
+Given a signature $\Si$, we can simply take the slice over
+$\bbrkt{\Si}$ in the semantics to obtain semantics for the type theory generated by $\Si$.
+Since a slice of a locally closed cartesian category is locally cartesian closed,
+$\SS_{\Pi}/\bbrkt{\Si}$ and $\SS_{\Pi,=}/\bbrkt{\Si}$ are still LCCC.
+
+\subsection{Classifying context extension}
+\link{dfn_universe}
+
+Let us briefly return to studying $\SS_{\Pi}$.
+In the original definition of a universe in a topos \cite{streicher},
+property $2$ includes all monos from $\CC$ (in particular identity morphisms)
+into the universe.
+Including all monos corresponds to including all proposition-context-extensions,
+i.e. $\CtxExt{\Ga}{X}{P}$ where $P$ is a proposition.
+
+The original property $5$ said that all morphisms of $\SS_{\Pi}$ are pullbacks of a single morphism
+$\ElCS : E \to U$.
+In our case this should be the map
+$\bbrkt{S} : \bbrkt{\CtxExt{S : \SortCS}{X}{S}} \to \bbrkt{S : \SortCS}$.
+This would imply in particular that composition and identity are also certain pullbacks of $\brkt{\ElCS}$.
+In the case of composition, this amounts to requiring dependent pair sorts (aka $\Si$-types) in the type theory.
+In the case of identity, this amounts to requiring a unit sort, i.e. a sort containing exactly one object.
