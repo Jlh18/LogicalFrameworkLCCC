@@ -31,13 +31,16 @@ and $\Pi$s correspond to internal homs in slices.
 	&&& {\CC/A}
 	\arrow[""{name=0, anchor=center, inner sep=0}, "{f^*}"', shift right=2, from=1-4, to=2-4]
 	\arrow[""{name=1, anchor=center, inner sep=0}, "{\Pi_f}"', shift right=2, from=2-4, to=1-4]
-	\arrow["{\Si_f}"', shift right=2, from=2-4, to=3-4]
-	\arrow["{f^*}"', shift right=2, from=3-4, to=2-4]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "{\Si_f}"', shift right=2, from=2-4, to=3-4]
+	\arrow[""{name=3, anchor=center, inner sep=0}, "{f^*}"', shift right=2, from=3-4, to=2-4]
 	\arrow["{\times f}"{description}, bend left = {- 60}, from=1-4, to=3-4]
 	\arrow["{-^f}"{description}, bend left = {- 60}, from=3-4, to=1-4]
 	\arrow["f", from=2-1, to=2-2]
 	\arrow["\dashv"{anchor=center}, draw=none, from=0, to=1]
+	\arrow["\dashv"{anchor=center}, draw=none, from=2, to=3]
 \end{tikzcd}\]
+
+In the above $\Si_{f}$ is the functor that composes the map from the slice with $f$.
 
 \begin{dfn}[Display]
   \link{dfn_display_map}
