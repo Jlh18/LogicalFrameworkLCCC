@@ -1,6 +1,6 @@
 \section{The category of contexts}
 
-I order to find categorical semantics for a type theory
+In order to find categorical semantics for a type theory
 it is useful to study the category of contexts.
 In this section we construct the category of contexts.
 We will call this category $\CC$ for the rest of this section.
@@ -17,7 +17,7 @@ This seems quite natural, since product classes become products,
 and function classes become internal homs in the semantics.
 If we are to immitate this for $\LF{\Si}$,
 we would only be able to talk about \textit{closed classes} $\ClsJdg{\bullet}{K}$,
-since in $\STLC$ we don't have dependent classes $\ClsJdg{\Ga}{K}$.
+since there are no dependent classes $\ClsJdg{\Ga}{K}$ in $\STLC$.
 However, in the presence of dependent pairs (aka $\Si$-types) we
 could view a context $\Ga = \CtxExt{X_{1}:K_{1},\dots}{X_{n}}{K_{n}}$
 as a closed class $\Si_{\Ga} := \Si_{X_{1}:K_{1}} \cdots \Si_{X_{n-1}:K_{n-1}} K_{n}$.
@@ -79,12 +79,12 @@ This makes $\bbrkt{\bullet}$ the terminal object.
 \end{multicols}
 
 For context extension, given $\ClsJdg{\Ga}{K}$,
-we obtain a substitution $\ObjJdg{\CtxExt{\Ga}{X}{K}}{\si}{\Ga}$
-by $\ObjJdg{\CtxExt{\Ga}{X}{K}}{X_{i}}{K_{i}}$ for each $X_{i} : K_{i} \in \Ga$.
+we obtain a substitution which we can denote as $\ObjJdg{\CtxExt{\Ga}{X}{K}}{\FstCS}{\Ga}$
+given by $\ObjJdg{\CtxExt{\Ga}{X}{K}}{Y_{i}}{K_{i}}$ for each $Y_{i} : K_{i} \in \Ga$.
 Then let's take the interpretation of $K$ to be a $\CC/\bbrkt{\Ga}$-object,
 where $\CC/\bbrkt{\Ga}$ is the slice category.
 
-\[ \bbrkt{\ClsJdg{\Ga}{K}} := \bbrkt{\CtxExt{\Ga}{X}{K}} \text{ and } \bbrkt{\ObjJdg{\CtxExt{\Ga}{X}{K}}{\si}{\Ga}}\]
+\[ \bbrkt{\ClsJdg{\Ga}{K}} := \bbrkt{\CtxExt{\Ga}{X}{K}} \text{ and } \bbrkt{\ObjJdg{\CtxExt{\Ga}{X}{K}}{\FstCS}{\Ga}}\]
 
 We can informally identify use the slice-object $\bbrkt{\ClsJdg{\Ga}{K}}$ to denote the underlying morphism.
 
@@ -292,28 +292,25 @@ The previous construction of the pullback $\bbrkt{K} \mapsto \bbrkt{\si} \mapsto
 defines a strictly equal diagram.
 \[ \bbrkt{\si}^{*} \bbrkt{\rho}^{*} \bbrkt{K} = \bbrkt{\si (\rho K)} =
    \bbrkt{(\si \gg \rho) K} = \brkt{\bbrkt{\rho} \circ \bbrkt{\si}}^{*} \bbrkt{K}\]
-
 % https://q.uiver.app/?q=WzAsOSxbMiwxLCJcXEdhXzEsXFxyaG8gSyJdLFsyLDIsIlxcR2FfMSJdLFszLDEsIlxcR2FfMixLIl0sWzMsMiwiXFxHYV8yIl0sWzEsMSwiXFxHYV8wLFxcc2kgXFxyaG8gSyJdLFsxLDIsIlxcR2FfMCJdLFswLDBdLFswLDIsIlxcR2FfMCJdLFswLDEsIlxcR2FfMCwoXFxzaSBcXGdnIFxccmhvKSBLIl0sWzAsMSwiXFxyaG8gSyJdLFswLDJdLFsyLDMsIksiXSxbMSwzLCJcXHJobyIsMl0sWzAsMywiIiwxLHsic3R5bGUiOnsibmFtZSI6ImNvcm5lciJ9fV0sWzQsMF0sWzQsNSwiXFxzaSBcXHJobyBLIiwyXSxbNCwxLCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XSxbNSwxLCJcXHNpIiwyXSxbNyw1LCI9IiwxXSxbOCw3LCIoXFxzaSBcXGdnIFxccmhvKSBLID0iXSxbOCw0LCI9IiwxXSxbOCw1LCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XV0=
 \[\begin{tikzcd}
-	{} \\
 	{\Ga_0,(\si \gg \rho) K} & {\Ga_0,\si \rho K} & {\Ga_1,\rho K} & {\Ga_2,K} \\
 	{\Ga_0} & {\Ga_0} & {\Ga_1} & {\Ga_2}
-	\arrow["{\rho K}", from=2-3, to=3-3]
-	\arrow[from=2-3, to=2-4]
-	\arrow["K", from=2-4, to=3-4]
-	\arrow["\rho"', from=3-3, to=3-4]
-	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=2-3, to=3-4]
-	\arrow[from=2-2, to=2-3]
-	\arrow["{\si \rho K}" {name=0}, from=2-2, to=3-2]
-	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=2-2, to=3-3]
-	\arrow["\si"', from=3-2, to=3-3]
-	\arrow["{=}"{description}, from=3-1, to=3-2]
-	\arrow["{(\si \gg \rho) K}"' {name=1}, from=2-1, to=3-1]
+	\arrow["{\rho K}", from=1-3, to=2-3]
+	\arrow[from=1-3, to=1-4]
+	\arrow["K", from=1-4, to=2-4]
+	\arrow["\rho"', from=2-3, to=2-4]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-3, to=2-4]
+	\arrow[from=1-2, to=1-3]
+	\arrow["{\si \rho K}" {name=0}, from=1-2, to=2-2]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-2, to=2-3]
+	\arrow["\si"', from=2-2, to=2-3]
 	\arrow["{=}"{description}, from=2-1, to=2-2]
+	\arrow["{(\si \gg \rho) K}"' {name=1}, from=1-1, to=2-1]
+	\arrow["{=}"{description}, from=1-1, to=1-2]
   \arrow["{=}"{description}, draw=none, from=1, to=0]
-	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=2-1, to=3-2]
+	\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
 \end{tikzcd}\]
-
 
 Note that in general categories (including LCCCs) the pullback along a composition is only
 necessarily isomorphic to double pullback.
@@ -341,7 +338,7 @@ since we are concerned with objects $\ObjJdg{\Ga}{O}{\PiCS{X}{S}{K}}$.
 	\arrow["\textsc{pi-app-obj}", shift left, from=1-3, to=1-1]
 \end{cd}
 
-The introduction rule \textsc{pi-lam-obj} fill in the missing details.
+The introduction rule \textsc{pi-lam-obj} fills in the missing details.
 We only use a special case of \textsc{pi-app-obj} here.
 
   {\color{syntax}
@@ -452,7 +449,7 @@ The category of contexts is \textit{not} a locally cartesian closed category.
 In particular, we don't have pullbacks for arbitrary morphisms in the category.
 However, (even for the fragment of the LF without the equality class)
 we can find a subcategory that \textit{is} locally cartesian closed,
-which essentially consists of context extentions, where the extensions only introduce sorts.
+which essentially consists of context extensions, where the extensions only introduce sorts.
 Furthermore, this subcategory $\SS_{\Pi}$ will be a \linkto{dfn_urm}{universe of representable maps}.
 
 We know that for contexts extended with sorts $\bbrkt{S} : \bbrkt{\CtxExt{\Ga}{X}{S}} \to \bbrkt{\Ga}$
@@ -488,7 +485,7 @@ take the closure under composition,
 and closure under pullback against $\CC$-morphisms.
 After checking some examples,
 we guess that $\SS_{\Pi}$ should be characterized as the set of
-compositions of sort-context-exentions,
+compositions of sort-context-exensions,
 i.e. $\bbrkt{S_{1}} \circ \cdots \circ \bbrkt{S_{n}}$
 (the identity on $\bbrkt{\Ga}$ when $n = 0$)
 whenever
@@ -621,7 +618,7 @@ Firstly this means that $\pi_{E} = \bbrkt{\ep}^{*}\bbrkt{\de}$ should be in this
 Although we can form the pullback along $\pi_{E}$ against any $\CC$-morphism
 (it is a series of context extensions),
 we do not get an adjunction $\pi_{E}^{*} \dashv \Pi_{\pi_{E}}$.
-Having the adjunction requires an impredicative dependent function type,
+Having the adjunction requires a global dependent function type,
 i.e. one that has general classes as hypotheses.
 
 However, if we require that \textit{both $\De$ and $\Ga$} are sort only,

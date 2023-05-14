@@ -20,7 +20,7 @@
   We denote the right adjoint to base change by $\Pi_{f}$.
 \end{dfn}
 
-We do not show that these two definitions are equivalent.
+We do not show that these two definitions of LCCC are equivalent.
 The idea is that existence of pullbacks correspond to existence of products in slices
 and $\Pi$s correspond to internal homs in slices.
 
@@ -46,12 +46,14 @@ In the above $\Si_{f}$ is the functor that composes the map from the slice with 
   \link{dfn_display_map}
   Let $\SS$ be a set of morphisms in category $\CC$.
   We say $\SS$ is a \textit{set of display maps} when for any compatible
-  pair of morphisms $f : A \to B$ in $\CC$ and $g : C \to B$ in $\SS$
-  the pullback exists and $f^{*}g \in \SS$.
+  pair of morphisms $f : A \to B$ in $\CC$ and display map $g : C \display B$ in $\SS$
+  the pullback exists and $f^{*}g : f^{*} C \display A$ is also a display map $\SS$.
+  We use $\display$ to denote display maps.
 
   We say $\SS$ is a \textit{display structure} when we have an operation that
-  takes a pair of morphisms $f : A \to B$ in $\CC$ and $g : C \to B$ in $\SS$
-  and returns a pullback such that $f^{*}g \in \SS$.
+  takes a pair of morphisms $f : A \to B$ in $\CC$ and $g : C \display B$ in $\SS$
+  and returns a pullback such that $f^{*}g : f^{*}C \display A$ is in $\SS$.
+  Note that display structures are sets of display maps.
 \end{dfn}
 
 % \begin{dfn}
@@ -75,7 +77,7 @@ The following definition is similar in spirit to both the definition of
   Let $\CC$ be a category, and $\SS$ a set of morphisms in $\CC$.
   We may denote morphisms in $\SS$ by $S : \Ga,S \to \Ga$ or $\si : \De \to \Ga$,
   though this is just notation.
-  We say $\SS$ is an universe of representable maps (URM) when
+  We say $\SS$ is a universe of representable maps (URM) when
   \begin{enumerate}
     \item $\SS$ is stable under $\CC$-pullbacks (strictly),
           i.e. if $\de : \De \to \Ga$ is in $\CC$ and $S : \Ga,S \to \Ga$ is in $\SS$

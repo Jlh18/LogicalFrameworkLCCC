@@ -22,30 +22,30 @@ in the literature.
 In particular I will identify two subcategories $\SS_{\Pi}$ and $\SS_{\Pi,=}$
 of the category of contexts, and identify which definitions these satisfy.
 
-\subsection{Overview of definitions in the literature}
+\subsection{Definitions in the literature}
 There are many closely related definitions that are useful in analyzing the category of contexts.
 Let us denote with $\CC$ the category of contexts for our LF,
-and fix two subcategories $\SS_{\Pi}$ and $\SS_{\Pi,=}$ which we define later.
+and fix two subcategories (or collection of maps in $\CC$) $\SS_{\Pi}$ and $\SS_{\Pi,=}$ which we define later.
 \begin{itemize}
   \item $\CC$ is \textit{not finitely complete}, in particular $\CC$ does not have all pullbacks.
   \item Because $\CC$ is not finitely complete, $\CC$ is
         \textit{not} a \textit{representable map category}
         as in Uemura \cite{uemura2019general}.
-        However, by equivalently {\color{syntax} adding an equality class for objects in classes}
-        or {\color{semantics} taking the finite completion $\bar{\CC}$},
-        we get $(\bar{\CC},\SS_{\Pi})$ and $(\bar{\CC},\SS_{\Pi})$ which are both representable map categories.
+        However, by {\color{syntax} adding an equality class for objects in classes}
         \[\color{syntax}
             \infer[\textsc{eq-cls}]{\ClsJdg{\Ga}{\EqCS{K}{O_0}{O_1}}}
             {\ObjJdg{\Ga}{O_0}{K} & \ObjJdg{\Ga}{O_1}{K}}
         \]
+        or equivalently {\color{semantics} taking the finite completion $\bar{\CC}$},
+        we can show that both $(\bar{\CC},\SS_{\Pi})$ and $(\bar{\CC},\SS_{\Pi,=})$ are representable map categories.
   \item Because $\CC$ is not finitely complete, $\CC$ is not locally Cartesian closed.
         Furthermore, adding an equality class/taking the finite completion $\bar{\CC}$
         still does not give a locally Cartesian closed category due to lack of
-        {\color{syntax} impredicative dependent function classes}/{\color{semantics}$\Pi$s for all $\bar{\CC}$-morphisms}.
-        Then {\color{syntax} adding an impredicative dependent function class (and equality classes for objects in classes)}
+        {\color{syntax} global dependent function classes}/{\color{semantics}$\Pi$s for all $\bar{\CC}$-morphisms}.
+        Then {\color{syntax} adding a global dependent function class (and equality classes for objects in classes)}
         is equivalent to {\color{semantics} taking the local Cartesian closure as in Gratzer \cite{gratzer2021syntactic}},
         \[\color{syntax}
-          \infer[\textsc{inpredicative-pi}]{\ClsJdg{\Ga}{\PiCS{X}{K_{0}}{K_{1}}}}
+          \infer[\textsc{pi-cls}]{\ClsJdg{\Ga}{\PiCS{X}{K_{0}}{K_{1}}}}
             {\ClsJdg{\Ga}{K_{0}} & \ClsJdg{\CtxExt{\Ga}{X}{K_{0}}}{K_{1}}}
         \]
   \item Both $\SS_{\Pi}$ and $\SS_{\Pi,=}$ are \textit{\linkto{dfn_display_map}{display structures}}
